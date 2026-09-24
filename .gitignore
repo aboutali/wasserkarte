@@ -1,0 +1,11 @@
+# downloaded sources and build outputs
+raw/
+build/
+dist/
+node_modules/
+
+# python / os noise
+__pycache__/
+*.pyc
+.venv/
+.DS_Store

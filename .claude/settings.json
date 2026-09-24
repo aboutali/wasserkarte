@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make:*)",
+      "Bash(python3 scripts/*)",
+      "Bash(node scripts/render.mjs:*)",
+      "Bash(npm ci)",
+      "Bash(npx playwright install:*)",
+      "Bash(git status)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ]
+  }
+}

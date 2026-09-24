@@ -1,0 +1,18 @@
+{
+  "name": "gewaesserstammbaum",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Stammbaum und Karte der Gewässer Deutschlands — headless-browser tooling (smoke test, poster PDF, screenshots)",
+  "type": "module",
+  "scripts": {
+    "smoke": "node scripts/render.mjs smoke",
+    "poster": "node scripts/render.mjs poster",
+    "screenshots": "node scripts/render.mjs screenshots"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
