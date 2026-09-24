@@ -1,0 +1,5 @@
+* text=auto eol=lf
+*.png binary
+*.pdf binary
+# Pipeline outputs: collapsed in GitHub diffs, excluded from language stats
+data/generated/*.json linguist-generated=true

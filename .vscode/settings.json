@@ -1,0 +1,6 @@
+{
+  "json.schemas": [
+    { "fileMatch": ["/data/waters/*.json"], "url": "./schema/waters.schema.json" }
+  ],
+  "files.associations": { "*.template.html": "html" }
+}

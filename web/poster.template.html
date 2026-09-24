@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="de"><head><meta charset="utf-8">
+<title>Gewässerstammbaum Deutschland — Poster</title>
+<!-- Fonts are loaded from build/fonts (python scripts/fetch_sources.py --fonts), not from a CDN,
+     so the PDF embeds exactly these faces even when rendering offline. -->
+<style>
+@font-face{font-family:'Spectral';src:url('fonts/Spectral-Regular.ttf');font-weight:400;font-style:normal}
+@font-face{font-family:'Spectral';src:url('fonts/Spectral-Medium.ttf');font-weight:500;font-style:normal}
+@font-face{font-family:'Spectral';src:url('fonts/Spectral-SemiBold.ttf');font-weight:600;font-style:normal}
+@font-face{font-family:'Spectral';src:url('fonts/Spectral-Italic.ttf');font-weight:400;font-style:italic}
+@font-face{font-family:'Spectral';src:url('fonts/Spectral-MediumItalic.ttf');font-weight:500;font-style:italic}
+@font-face{font-family:'IBM Plex Mono';src:url('fonts/IBMPlexMono-Regular.ttf');font-weight:400}
+@font-face{font-family:'IBM Plex Mono';src:url('fonts/IBMPlexMono-Medium.ttf');font-weight:500}
+@font-face{font-family:'Archivo';src:url('fonts/Archivo.ttf');font-weight:100 900}
+
+@page{size:1189mm 841mm; margin:0}
+:root{
+  --paper:#eef2f3; --surface:#fbfdfd; --ink:#0f2028; --ink-2:#48626e; --ink-3:#88a0a9;
+  --rule:#c3d2d6; --rule-2:#dae5e8;
+  --nordsee:#1a6a9e; --ostsee:#2b8b78; --donau:#b06526;
+  --f-disp:'Spectral',Georgia,serif; --f-ui:'Archivo',Arial,sans-serif;
+  --f-mono:'IBM Plex Mono',monospace;
+  --ind:4.4mm;
+}
+*{box-sizing:border-box}
+html,body{margin:0; padding:0; background:var(--paper); color:var(--ink);
+  font-family:var(--f-ui); -webkit-print-color-adjust:exact; print-color-adjust:exact}
+.sheet{width:1189mm; height:841mm; padding:16mm 16mm 12mm; display:flex; flex-direction:column;
+  background:var(--paper); overflow:hidden}
+
+.top{display:flex; gap:14mm; align-items:flex-end; border-bottom:.5pt solid var(--rule);
+  padding-bottom:6mm; margin-bottom:7mm}
+.tt{flex:0 0 300mm}
+.eyebrow{font-size:10pt; letter-spacing:.2em; text-transform:uppercase; color:var(--ink-2);
+  font-weight:600; margin:0 0 3mm}
+h1{font-family:var(--f-disp); font-weight:500; font-size:62pt; line-height:.98; margin:0 0 4mm;
+  letter-spacing:-.01em}
+h1 em{font-style:italic; color:var(--ink-2)}
+.lede{font-family:var(--f-disp); font-size:12.5pt; line-height:1.5; color:var(--ink-2); margin:0;
+  max-width:118mm}
+.figs{display:flex; gap:0; flex:1}
+.fig{flex:1; padding:0 5mm; border-left:.5pt solid var(--rule-2)}
+.fig b{display:block; font-family:var(--f-mono); font-size:26pt; font-weight:500;
+  font-variant-numeric:tabular-nums; line-height:1.1}
+.fig span{font-size:8pt; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-2)}
+
+.body{flex:1; display:flex; gap:10mm; min-height:0}
+.left{flex:0 0 470mm; display:flex; flex-direction:column; min-height:0}
+.right{flex:1; min-width:0; display:flex; flex-direction:column; min-height:0}
+.hd{display:flex; align-items:baseline; gap:4mm; margin:0 0 3mm}
+.hd h2{font-family:var(--f-disp); font-weight:500; font-size:22pt; margin:0}
+.hd span{font-family:var(--f-mono); font-size:9pt; color:var(--ink-3); letter-spacing:.1em}
+.hd p{margin:0; font-size:9.2pt; color:var(--ink-2); max-width:150mm; line-height:1.45}
+
+.mapwrap{flex:1; min-height:0; position:relative; border:.5pt solid var(--rule); background:#cfe3ec}
+#map{display:block; width:100%; height:100%}
+.scalebar{position:absolute; left:6mm; bottom:6mm; font-family:var(--f-mono); font-size:6.5pt;
+  color:var(--ink-2); letter-spacing:.06em}
+.scalebar .sb{height:1.6mm; border:.5pt solid var(--ink-2); border-top:0; margin-bottom:1mm}
+
+.legend{display:flex; gap:0; border:.5pt solid var(--rule-2); margin-top:4mm}
+.lg{flex:1; padding:3mm 4mm; border-right:.5pt solid var(--rule-2)}
+.lg:last-child{border-right:0}
+.lg h4{margin:0 0 2mm; font-size:7.6pt; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:600}
+.lg ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:1.2mm}
+.lg li{display:flex; align-items:center; gap:2.5mm; font-size:8.6pt; color:var(--ink-2)}
+
+.treecols{flex:1; min-height:0; column-count:5; column-gap:6mm; column-fill:auto;
+  column-rule:.5pt solid var(--rule-2); font-size:0}
+.row{display:flex; align-items:stretch; height:6.55mm; break-inside:avoid; font-size:10pt}
+.g{flex:0 0 var(--ind); position:relative}
+.g.v::before,.g.e::before{content:""; position:absolute; left:50%; top:0; height:100%;
+  border-left:.5pt solid var(--rule-2)}
+.g.e.last::before{height:50%}
+.g.e::after{content:""; position:absolute; left:50%; top:50%; width:62%;
+  border-top:.5pt solid var(--rule-2)}
+.mark{flex:0 0 3.4mm; align-self:center; height:3.4mm; position:relative; margin-right:1.6mm}
+.mark::before{content:""; position:absolute; inset:.8mm; border-radius:50%; background:var(--c)}
+.row[data-t="lake"] .mark::before{inset:.25mm; background:transparent; border:.4pt solid var(--c)}
+.row[data-t="canal"] .mark::before{inset:1.3mm 0; border-radius:0; height:.9mm; top:1.25mm; background:var(--c)}
+.row[data-t="coastal"] .mark::before{inset:.5mm; border-radius:.2mm; background:transparent;
+  border:.4pt dotted var(--c)}
+.nm{align-self:center; font-family:var(--f-disp); font-size:10.8pt; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis}
+.row[data-t="lake"] .nm{font-style:italic}
+.row[data-t="canal"] .nm{font-family:var(--f-mono); font-size:8.6pt}
+.row[data-t="coastal"] .nm,.row[data-t="sea"] .nm{font-family:var(--f-ui); text-transform:uppercase;
+  letter-spacing:.11em; font-size:8.6pt; font-weight:600}
+.row[data-d="0"] .nm{font-size:9.6pt; letter-spacing:.16em}
+.row[data-d="1"] .nm{font-weight:600}
+.side{align-self:center; font-family:var(--f-mono); font-size:7.4pt; color:var(--ink-3);
+  margin-left:1.2mm}
+.len{align-self:center; font-family:var(--f-mono); font-size:8.4pt; color:var(--ink-2);
+  font-variant-numeric:tabular-nums; text-align:right; margin-left:auto; padding-left:2mm;
+  white-space:nowrap}
+.rlabel{font-family:var(--f-disp); font-style:italic; fill:var(--ink);
+  paint-order:stroke; stroke:#f2f1ec; stroke-linejoin:round}
+.clabel{font-family:var(--f-ui); font-weight:600; letter-spacing:.14em; text-transform:uppercase;
+  fill:#8b968f; paint-order:stroke; stroke:#f2f1ec}
+.llabel{font-family:var(--f-disp); font-style:italic; fill:#2c6d8e;
+  paint-order:stroke; stroke:#f2f1ec}
+.citylabel{font-family:var(--f-ui); font-weight:500; fill:var(--ink);
+  paint-order:stroke; stroke:#f2f1ec}
+.foot{margin-top:5mm; padding-top:3mm; border-top:.5pt solid var(--rule);
+  display:flex; gap:10mm; font-size:8pt; color:var(--ink-2); line-height:1.5}
+.foot p{margin:0; flex:1}
+.foot b{font-weight:600; color:var(--ink)}
+</style></head>
+<body><div class="sheet">
+
+<div class="top">
+  <div class="tt">
+    <p class="eyebrow">Hydrologische Übersicht · {{n_waters}} Gewässer · Stand {{year}}</p>
+    <h1>Gewässerstammbaum <em>Deutschland</em></h1>
+    <p class="lede">Jeder Bach mündet in einen Fluss, jeder Fluss in einen Strom, jeder Strom in ein
+    Meer. Diese Abstammungslinie ist eindeutig — und darum lässt sich das gesamte Gewässernetz
+    Deutschlands als Stammbaum lesen.</p>
+  </div>
+  <div class="figs" id="figs"></div>
+</div>
+
+<div class="body">
+  <div class="left">
+    <div class="hd"><h2>Die Karte</h2><span>Teil II</span>
+      <p>{{n_surveyed}} Flussläufe sind aus vermessenen Gewässerlinien übernommen und zeigen den echten
+      Verlauf; {{n_schematic}} meist kurze Zuflüsse sind zwischen belegter Quelle und belegter Mündung
+      schematisch geführt und heller gezeichnet. Die Kanäle folgen belegten Wegpunkten und sind
+      deshalb eckig statt geschwungen. Staatsgrenzen, Bundesländer, Seen und {{n_cities}} Städte dienen als
+      Orientierung.</p></div>
+    <div class="mapwrap">
+      <svg id="map"></svg>
+      <div class="scalebar"><div class="sb" id="sb"></div><span>100 km</span></div>
+    </div>
+    <div class="legend">
+      <div class="lg"><h4>Einzugsgebiet</h4><ul>
+        <li><svg width="26" height="8"><path d="M0 4h26" stroke="#1a6a9e" stroke-width="2.4"/></svg>Nordsee — {{n_nordsee}}</li>
+        <li><svg width="26" height="8"><path d="M0 4h26" stroke="#2b8b78" stroke-width="2.4"/></svg>Ostsee — {{n_ostsee}}</li>
+        <li><svg width="26" height="8"><path d="M0 4h26" stroke="#b06526" stroke-width="2.4"/></svg>Schwarzes Meer — {{n_schwarzes_meer}}</li>
+      </ul></div>
+      <div class="lg"><h4>Verlauf</h4><ul>
+        <li><svg width="26" height="8"><path d="M0 6c4-4 6 2 10-1s6 2 16-3" fill="none" stroke="#1a6a9e" stroke-width="2"/></svg>vermessen ({{n_surveyed}})</li>
+        <li><svg width="26" height="8"><path d="M0 6c8-4 18-1 26-3" fill="none" stroke="#1a6a9e" stroke-width="1.3" opacity=".45"/></svg>schematisch ({{n_schematic}})</li>
+        <li><svg width="26" height="8"><path d="M1 7 9 3l6 1 10-4" fill="none" stroke="#5c7079" stroke-width="1.6" stroke-dasharray="4 3"/></svg>Kanal, nach Wegpunkten ({{n_canal_routes}})</li>
+        <li><svg width="26" height="8"><path d="M1 7 9 3l6 1 10-4" fill="none" stroke="#5c7079" stroke-width="1.4" stroke-dasharray="1.4 2.6" opacity=".6"/></svg>Kanal, historisch</li>
+      </ul></div>
+      <div class="lg"><h4>Strichstärke</h4><ul>
+        <li><svg width="26" height="8"><path d="M0 4h26" stroke="#48626e" stroke-width="3.4"/></svg>über 500 km</li>
+        <li><svg width="26" height="8"><path d="M0 4h26" stroke="#48626e" stroke-width="1.9"/></svg>100 bis 500 km</li>
+        <li><svg width="26" height="8"><path d="M0 4h26" stroke="#48626e" stroke-width=".9"/></svg>unter 100 km</li>
+      </ul></div>
+      <div class="lg"><h4>Orientierung</h4><ul>
+        <li><svg width="26" height="8"><circle cx="13" cy="4" r="2.4" fill="#0f2028"/></svg>Stadt als Referenzpunkt</li>
+        <li><svg width="26" height="8"><path d="M2 7 8 2l7 4 9-5" fill="none" stroke="#98a49f" stroke-width="1.3"/></svg>Staatsgrenze</li>
+        <li><svg width="26" height="8"><path d="M2 7 8 2l7 4 9-5" fill="none" stroke="#c9c9c0" stroke-width="1"/></svg>Bundesland</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="hd"><h2>Der Stammbaum</h2><span>Teil I</span>
+      <p>Eingerückt nach Ordnung; Geschwister in der Reihenfolge ihrer Mündung von der Quelle
+      abwärts.</p></div>
+    <div class="treecols" id="tree"></div>
+  </div>
+</div>
+
+<div class="foot">
+  <p><b>Datengrundlage.</b> {{n_waters}} Einträge: {{n_river}} Fliessgewässer, {{n_lake}} Seen und Talsperren,
+  {{n_coastal}} Küstengewässer, {{n_canal}} Kanäle, {{n_sea}} Meere. Aufgenommen sind Gewässer mit Deutschlandbezug, auch
+  ausländische Ober- und Unterläufe deutscher Flüsse, damit die Abstammungslinie bis zum Meer
+  geschlossen bleibt. Längen, Mündungsorte und Mündungsufer nach der deutschsprachigen Wikipedia,
+  Küsten-, Landes-, Staatsgrenzen-, See- und Städtedaten nach Natural Earth (10 m), Flussgeometrien
+  nach GSHHG/WDBII.</p>
+  <p><b>Zur Karte.</b> {{n_surveyed}} Läufe stammen aus vermessenen Gewässerlinien (GSHHG/WDBII, volle
+  Auflösung) und wurden über Quell- und Mündungskoordinate dem jeweiligen Gewässer zugeordnet;
+  {{n_schematic}} kürzere Zuflüsse sind zwischen belegter Quelle und belegter Mündung schematisch geführt und
+  heller gezeichnet. Die Kanäle folgen belegten Zwischenpunkten. Mündungspunkte sind auf den Lauf
+  des Vorfluters gerastert, damit die Karte topologisch mit dem Stammbaum übereinstimmt.</p>
+  <p><b>Zur Systematik.</b> Seen und Talsperren hängen an dem Gewässer, in das sie entwässern.
+  Kanäle sind dem Gewässer zugeordnet, in das ihr Endpunkt übergeht — der Mittellandkanal also dem
+  Elbe-Havel-Kanal, der Datteln-Hamm-Kanal dem Dortmund-Ems-Kanal. Ludwigskanal und Eiderkanal sind
+  historisch und ausser Betrieb. Das Ufer der Mündung ist in Fliessrichtung des Vorfluters
+  angegeben.</p>
+</div>
+
+</div>
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(function(){
+const D=JSON.parse(document.getElementById('data').textContent);
+const W=D.waters, LINES=D.lines, STATES=D.states;
+const BY={}; W.forEach(w=>BY[w.id]=w);
+const C={nordsee:'#1a6a9e',ostsee:'#2b8b78',schwarzes_meer:'#b06526'};
+
+/* ---------------------------------------------------------------- tree */
+const KIDS={}; W.forEach(w=>{ if(w.parent) (KIDS[w.parent]=KIDS[w.parent]||[]).push(w.id); });
+function projT(p,m){const l=LINES[p]; if(!l||!m) return null; let b=1e18,bi=0;
+  for(let i=0;i<l.length;i++){const dy=(l[i][0]-m[0])*111.2,dx=(l[i][1]-m[1])*70,d=dy*dy+dx*dx;
+    if(d<b){b=d;bi=i;}} return bi/Math.max(1,l.length-1);}
+Object.keys(KIDS).forEach(p=>{const a=KIDS[p],t={};
+  a.forEach(i=>t[i]=projT(p,BY[i].mouth));
+  a.sort((x,y)=>{ if(t[x]!==null&&t[y]!==null&&Math.abs(t[x]-t[y])>1e-6) return t[x]-t[y];
+    const lx=BY[x].length_km||BY[x].area_km2||0, ly=BY[y].length_km||BY[y].area_km2||0;
+    return ly!==lx? ly-lx : BY[x].name.localeCompare(BY[y].name,'de');});});
+const ROOTS=W.filter(w=>!w.parent).map(w=>w.id);
+/* seas keep the order of data/waters/meere.json: Nordsee, Ostsee, Schwarzes Meer */
+const DEPTH={};
+ROOTS.forEach(r=>(function w2(i,d){DEPTH[i]=d;(KIDS[i]||[]).forEach(c=>w2(c,d+1));})(r,0));
+
+const counts={river:0,lake:0,canal:0,coastal:0,sea:0}; W.forEach(w=>counts[w.type]++);
+document.getElementById('figs').innerHTML=[[W.length,'Gewässer gesamt'],[counts.river,'Fliessgewässer'],
+ [counts.lake,'Seen und Talsperren'],[counts.canal,'Kanäle'],[counts.coastal,'Küstengewässer'],
+ [counts.sea,'Meere als Wurzel']].map(f=>`<div class="fig"><b>${f[0]}</b><span>${f[1]}</span></div>`).join('');
+
+function fmt(w){ if(w.type==='lake'||w.type==='coastal')
+    return w.area_km2? (w.area_km2>=100?Math.round(w.area_km2):w.area_km2)+' km²':'';
+  return w.length_km? (w.length_km>=100?Math.round(w.length_km):w.length_km)+' km':''; }
+let html='';
+function rec(id,anc){
+  const w=BY[id]; let g='';
+  anc.forEach((isLast,i)=>{const last=i===anc.length-1;
+    g+=`<span class="g ${last?'e':(isLast?'':'v')}${last&&isLast?' last':''}"></span>`;});
+  html+=`<div class="row" data-t="${w.type}" data-d="${DEPTH[id]}" style="--c:${C[w.sea]||'#48626e'}">`
+    +g+`<span class="mark"></span><span class="nm">${w.name}</span>`
+    +(w.side?`<span class="side">${w.side.toLowerCase()}</span>`:'')
+    +`<span class="len">${fmt(w)}</span></div>`;
+  const k=KIDS[id]||[];
+  k.forEach((c,i)=>{anc.push(i===k.length-1); rec(c,anc); anc.pop();});
+}
+ROOTS.forEach(r=>rec(r,[]));
+document.getElementById('tree').innerHTML=html;
+
+/* ---------------------------------------------------------------- map */
+const K=Math.cos(51*Math.PI/180), SC=1000, NS='http://www.w3.org/2000/svg';
+const px=lo=>lo*K*SC, py=la=>-la*SC;
+const map=document.getElementById('map');
+const BASE_D=D.base, SRC=D.src;
+function el(n,a){const e=document.createElementNS(NS,n); for(const k in a) e.setAttribute(k,a[k]); return e;}
+const B={la0:46.62,la1:55.32,lo0:5.35,lo1:15.70};
+const X0=px(B.lo0),X1=px(B.lo1),Y0=py(B.la1),Y1=py(B.la0);
+const rect=map.getBoundingClientRect();
+let vw=X1-X0, vh=Y1-Y0;
+const ar=rect.width/rect.height;
+if(vw/vh<ar) vw=vh*ar; else vh=vw/ar;
+const cx=(X0+X1)/2, cy=(Y0+Y1)/2;
+map.setAttribute('viewBox',(cx-vw/2)+' '+(cy-vh/2)+' '+vw+' '+vh);
+const upp=vw/rect.width;                       /* user units per rendered px */
+const LS=rect.width/1780;                      /* label scale for the poster */
+
+const gO=el('g'),gL=el('g'),gS=el('g'),gB=el('g'),gK=el('g'),gC=el('g'),gRs=el('g'),gRr=el('g'),
+      gCity=el('g'),gT=el('g');
+map.append(gO,gL,gS,gB,gK,gC,gRs,gRr,gCity,gT);
+function ringsPath(rings){
+  return rings.map(r=>'M'+r.map(p=>px(p[1]).toFixed(1)+' '+py(p[0]).toFixed(1)).join('L')+'Z').join('');
+}
+gO.appendChild(el('path',{d:ringsPath(BASE_D.ocean),fill:'#cfe3ec','fill-rule':'evenodd'}));
+BASE_D.countries.forEach(c=>{
+  gL.appendChild(el('path',{d:ringsPath(c.rings),'fill-rule':'evenodd',
+    fill:c.iso==='DEU'?'#f2f1ec':'#e7e7e1'}));
+  gB.appendChild(el('path',{d:ringsPath(c.rings),fill:'none',stroke:'#98a49f',
+    'stroke-width':(1.15*upp).toFixed(2),'stroke-linejoin':'round'}));
+});
+STATES.forEach(s=>gS.appendChild(el('path',{d:ringsPath(s.rings),fill:'none',stroke:'#c9c9c0',
+  'stroke-width':(0.85*upp).toFixed(2)})));
+BASE_D.lakes.forEach(l=>gK.appendChild(el('path',{d:ringsPath(l.rings),'fill-rule':'evenodd',
+  fill:'#cfe3ec',stroke:'#5f9fc4','stroke-width':(0.7*upp).toFixed(2),'stroke-opacity':.6})));
+
+function smooth(pts){
+  const P=pts.map(p=>[px(p[1]),py(p[0])]);
+  if(P.length<2) return '';
+  if(P.length===2) return 'M'+P[0][0].toFixed(1)+' '+P[0][1].toFixed(1)+'L'+P[1][0].toFixed(1)+' '+P[1][1].toFixed(1);
+  let d='M'+P[0][0].toFixed(1)+' '+P[0][1].toFixed(1);
+  for(let i=0;i<P.length-1;i++){
+    const p0=P[i-1]||P[i],p1=P[i],p2=P[i+1],p3=P[i+2]||P[i+1];
+    const c1=[p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6];
+    const c2=[p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6];
+    d+='C'+c1[0].toFixed(1)+' '+c1[1].toFixed(1)+','+c2[0].toFixed(1)+' '+c2[1].toFixed(1)
+      +','+p2[0].toFixed(1)+' '+p2[1].toFixed(1);
+  }
+  return d;
+}
+W.forEach(w=>{
+  if(w.type==='lake'){
+    const a=w.area_km2||3;
+    if(a>=40||!w.source) return;                /* larger lakes come from the polygon layer */
+    const r=Math.max(8,Math.sqrt(a/Math.PI)*(SC/111.2));
+    gK.appendChild(el('circle',{cx:px(w.source[1]).toFixed(1),cy:py(w.source[0]).toFixed(1),
+      r:r.toFixed(1),fill:'#cfe3ec',stroke:'#5f9fc4','stroke-width':(0.8*upp).toFixed(2),
+      'stroke-opacity':.7}));
+    return;
+  }
+  if(w.type!=='river'&&w.type!=='canal') return;
+  const l=LINES[w.id]; if(!l||l.length<2) return;
+  const real=SRC[w.id]!=='schema';
+  const isC=w.type==='canal';
+  const lw=Math.max(0.6,Math.min(4.6,Math.pow((w.length_km||25)/130,0.62)*1.75))*(real?1:0.78)*upp;
+  const dd=isC?('M'+l.map(p=>px(p[1]).toFixed(1)+' '+py(p[0]).toFixed(1)).join('L')):smooth(l);
+  const p=el('path',{d:dd,fill:'none','stroke-linecap':'round','stroke-linejoin':'round',
+    stroke:isC?'#5c7079':C[w.sea],'stroke-width':lw.toFixed(2),
+    'stroke-opacity':isC?(w.historic?0.5:0.85):(real?1:0.42),
+    'stroke-dasharray':isC?(w.historic?(1.6*upp).toFixed(1)+' '+(3*upp).toFixed(1)
+                                       :(6*upp).toFixed(1)+' '+(3.5*upp).toFixed(1)):''});
+  (isC?gC:(real?gRr:gRs)).appendChild(p);
+});
+BASE_D.cities.forEach(c=>{
+  const big=c.pop>=500000;
+  gCity.appendChild(el('circle',{cx:px(c.lon).toFixed(1),cy:py(c.lat).toFixed(1),
+    r:((big?3.0:2.3)*LS*upp).toFixed(2), fill:big?'#0f2028':'#fbfdfd',
+    stroke:'#0f2028','stroke-width':(1.2*LS*upp).toFixed(2)}));
+});
+
+/* labels, placed by priority with a simple collision test */
+const defs=[];
+function add(txt,lat,lon,cls,fs,prio,ang,anchor,dx){
+  const x=px(lon),y=py(lat);
+  const t=el('text',{class:cls,'text-anchor':anchor||'middle','font-size':(fs*LS*upp).toFixed(2),
+    'stroke-width':(3*LS*upp).toFixed(2),x:(x+(dx||0)*LS*upp).toFixed(1),y:y.toFixed(1)});
+  t.textContent=txt;
+  if(ang) t.setAttribute('transform','rotate('+ang.toFixed(1)+' '+x.toFixed(1)+' '+y.toFixed(1)+')');
+  gT.appendChild(t);
+  defs.push({el:t,x:x+(dx||0)*LS*upp,y:y,prio:prio,
+    w:(txt.length*fs*0.52+4)*LS,h:fs*1.2*LS,centered:!dx});
+}
+BASE_D.countries.forEach(c=>{ if(c.iso!=='DEU') add(c.name,c.label[0],c.label[1],'clabel',7.4,30); });
+W.forEach(w=>{
+  const L=w.length_km||0;
+  if(w.type==='river'||w.type==='canal'){
+    if(w.type==='canal'&&L<45) return;
+    if(w.type==='river'&&L<48) return;
+    const l=LINES[w.id]; if(!l||l.length<2) return;
+    const i=Math.max(1,Math.round(l.length*0.55));
+    const a=l[i-1],b=l[Math.min(l.length-1,i+1)];
+    let ang=Math.atan2(py(b[0])-py(a[0]),px(b[1])-px(a[1]))*180/Math.PI;
+    if(ang>90) ang-=180; if(ang<-90) ang+=180;
+    const fs=w.type==='canal'?5.6:L>=400?12:L>=200?9.4:L>=100?7.4:6.2;
+    add(w.name,l[i][0],l[i][1],w.type==='canal'?'clabel':'rlabel',fs,100+L,ang);
+  }else if(w.type==='lake'){
+    const a=w.area_km2||0; if(a<14) return;
+    add(w.name,w.source[0],w.source[1],'llabel',a>=100?7.2:6,60+a/10,0);
+  }else if(w.type==='coastal'){
+    const a=w.area_km2||0; if(a<150) return;
+    add(w.name,w.source[0],w.source[1],'clabel',5.6,40+a/50,0);
+  }
+});
+BASE_D.cities.forEach(c=>add(c.n,c.lat,c.lon,'citylabel',c.pop>=500000?7.4:6.4,
+  500+c.pop/1000,0,'start',5));
+defs.sort((a,b)=>b.prio-a.prio);
+defs.forEach(d=>gT.appendChild(d.el));
+const boxes=[];
+for(const d of defs){
+  const sx=(d.x-(cx-vw/2))/upp, sy=(d.y-(cy-vh/2))/upp;
+  if(sx<-20||sy<-20||sx>rect.width+20||sy>rect.height+20){ d.el.remove(); continue; }
+  const half=d.centered?d.w/2:0;
+  const bx=[sx-half,sy-d.h*0.6,sx-half+d.w,sy+d.h*0.4];
+  let hit=false;
+  for(let i=0;i<boxes.length;i++){const o=boxes[i];
+    if(bx[0]<o[2]&&bx[2]>o[0]&&bx[1]<o[3]&&bx[3]>o[1]){hit=true;break;}}
+  if(hit){ d.el.remove(); continue; }
+  boxes.push(bx);
+}
+document.getElementById('sb').style.width=((100/111.2)*SC/upp).toFixed(1)+'px';
+document.body.dataset.ready='1';
+})();
+</script>
+</body></html>
