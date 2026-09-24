@@ -114,7 +114,7 @@ within ~75–125 % of `length_km` (the validator warns otherwise).
 - 300 of 413 rivers are schematic: GSHHG only contains the larger rivers. A better source
   (OSM waterways, EU-Hydro, BKG DLM250) would allow real courses for all of them.
 - `make check` warnings worth resolving: missing lengths (Kleine Vils, Sagter Ems, Broklandsau,
-  Husumer Au, Wörpe, Bongsieler Kanal), `boize`/`pader`/`ihme` source–mouth distance exceeds
+  Husumer Au, Wörpe, Bongsieler Kanal), `boize`/`oder_havel_kanal`/`pader`/`ihme` source–mouth distance exceeds
   length (coordinates or length wrong), `maas` has a `side` although it drains into the sea.
 - `data/generated/states.json` derives from isellsoap/deutschlandGeoJSON (DIVA-GIS source); see
   DATA_SOURCES.md before any commercial use.

@@ -24,8 +24,8 @@ The page is a single self-contained HTML file with no dependencies, in German, l
 ## Quick start
 
 ```bash
-git clone https://github.com/<you>/gewaesserstammbaum.git
-cd gewaesserstammbaum
+git clone https://github.com/aboutali/wasserkarte.git
+cd wasserkarte
 make site        # -> dist/index.html (Python 3.10+, standard library only)
 make serve       # http://localhost:8000
 ```
