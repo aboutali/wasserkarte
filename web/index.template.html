@@ -1,0 +1,1042 @@
+<title>Gewässerstammbaum Deutschland</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Spectral:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap">
+
+<style>
+:root{
+  --paper:#e9eef0; --surface:#f7fafb; --surface-2:#eff4f5;
+  --ink:#0f2028; --ink-2:#4b6672; --ink-3:#7e97a1;
+  --rule:#c6d5d9; --rule-2:#dbe6e9;
+  --nordsee:#1a6a9e; --ostsee:#2b8b78; --donau:#b06526;
+  --sel:#d8461f;
+  --land:#f2f1ec; --land-2:#e7e7e1; --land-line:#cbcbc2;
+  --sea:#cfe3ec; --border:#9aa6a2; --halo:#f3f4f0;
+  --lake-ink:#2c6d8e; --ctry-ink:#a9b1ac; --grat:#d9ddd6;
+  --ind:18px; --rowh:26px;
+  --f-disp:'Spectral',Georgia,'Times New Roman',serif;
+  --f-ui:'Archivo','Helvetica Neue',Arial,sans-serif;
+  --f-mono:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
+  --shadow:0 1px 2px rgba(15,32,40,.06),0 8px 28px rgba(15,32,40,.10);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0a1417; --surface:#101f24; --surface-2:#0d1b1f;
+    --ink:#dbe8ea; --ink-2:#93aab1; --ink-3:#6b858d;
+    --rule:#24393f; --rule-2:#1a2b30;
+    --nordsee:#54a6d8; --ostsee:#4fbda3; --donau:#e09441;
+    --sel:#ff6d47;
+    --land:#171c1e; --land-2:#12181a; --land-line:#2a3336;
+    --sea:#0b191f; --border:#41504f; --halo:#0f1518;
+    --lake-ink:#7cc0e0; --ctry-ink:#3d4a48; --grat:#1c2528;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0a1417; --surface:#101f24; --surface-2:#0d1b1f;
+  --ink:#dbe8ea; --ink-2:#93aab1; --ink-3:#6b858d;
+  --rule:#24393f; --rule-2:#1a2b30;
+  --nordsee:#54a6d8; --ostsee:#4fbda3; --donau:#e09441;
+  --sel:#ff6d47;
+  --land:#171c1e; --land-2:#12181a; --land-line:#2a3336;
+  --sea:#0b191f; --border:#41504f; --halo:#0f1518;
+  --lake-ink:#7cc0e0; --ctry-ink:#3d4a48; --grat:#1c2528;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 30px rgba(0,0,0,.45);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:var(--f-ui); font-size:15px; line-height:1.55;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:1240px; margin:0 auto; padding:0 20px 80px}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--sel); outline-offset:2px; border-radius:2px}
+
+/* ---------------------------------------------------------- masthead */
+.mast{padding:52px 0 26px; border-bottom:1px solid var(--rule)}
+.eyebrow{
+  font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--ink-2); font-weight:600; margin:0 0 14px;
+}
+h1{
+  font-family:var(--f-disp); font-weight:500; letter-spacing:-.01em;
+  font-size:clamp(34px,7vw,62px); line-height:1.02; margin:0 0 16px;
+  text-wrap:balance;
+}
+h1 em{font-style:italic; color:var(--ink-2)}
+.lede{
+  font-family:var(--f-disp); font-size:clamp(16px,2.2vw,19px); line-height:1.6;
+  color:var(--ink-2); max-width:62ch; margin:0;
+}
+.figs{
+  display:flex; flex-wrap:wrap; gap:0; margin-top:30px;
+  border-top:1px solid var(--rule-2);
+}
+.fig{
+  flex:1 1 130px; padding:14px 16px 12px 0; border-right:1px solid var(--rule-2);
+}
+.fig:last-child{border-right:0}
+.fig b{
+  display:block; font-family:var(--f-mono); font-size:24px; font-weight:500;
+  letter-spacing:-.02em; font-variant-numeric:tabular-nums;
+}
+.fig span{font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-2)}
+
+/* ---------------------------------------------------------- sections */
+section{padding-top:46px}
+.shead{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:6px}
+h2{
+  font-family:var(--f-disp); font-weight:500; font-size:clamp(23px,3.4vw,31px);
+  margin:0; letter-spacing:-.01em;
+}
+.snum{
+  font-family:var(--f-mono); font-size:12px; color:var(--ink-3);
+  letter-spacing:.1em; padding-top:4px;
+}
+.sintro{color:var(--ink-2); max-width:66ch; margin:8px 0 22px; font-size:14.5px}
+
+/* ---------------------------------------------------------- controls */
+.bar{
+  display:flex; gap:8px; flex-wrap:wrap; align-items:center;
+  padding:10px 12px; background:var(--surface); border:1px solid var(--rule-2);
+  border-radius:3px; margin-bottom:12px;
+}
+.search{
+  flex:1 1 190px; min-width:150px; display:flex; align-items:center; gap:7px;
+  background:var(--surface-2); border:1px solid var(--rule-2); border-radius:2px;
+  padding:5px 9px;
+}
+.search input{
+  border:0; background:transparent; color:inherit; font:inherit; font-size:14px;
+  width:100%; outline:none;
+}
+.search svg{flex:0 0 14px; color:var(--ink-3)}
+.chip{
+  font:inherit; font-size:12.5px; font-weight:500; cursor:pointer;
+  background:var(--surface-2); color:var(--ink-2);
+  border:1px solid var(--rule-2); border-radius:2px; padding:5px 10px;
+  display:inline-flex; align-items:center; gap:6px; line-height:1.2;
+}
+.chip:hover{border-color:var(--rule); color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink); color:var(--paper); border-color:var(--ink)}
+.chip .dot{width:8px; height:8px; border-radius:50%; background:currentColor; opacity:.9}
+.chip.c-nordsee .dot{background:var(--nordsee)}
+.chip.c-ostsee .dot{background:var(--ostsee)}
+.chip.c-schwarzes_meer .dot{background:var(--donau)}
+.spacer{flex:1 1 8px}
+
+/* ---------------------------------------------------------- tree */
+.treebox{
+  border:1px solid var(--rule); background:var(--surface); border-radius:3px;
+  max-height:min(72vh,760px); overflow:auto; overscroll-behavior:contain;
+}
+.tree{min-width:max-content; padding:8px 0 14px}
+.row{
+  display:flex; align-items:stretch; min-height:var(--rowh);
+  cursor:pointer; position:relative; padding-right:16px;
+}
+.row:hover{background:var(--surface-2)}
+.row.sel{background:color-mix(in srgb,var(--sel) 12%,transparent)}
+.row.hit .nm{box-shadow:inset 0 -2px 0 var(--sel)}
+.g{flex:0 0 var(--ind); position:relative}
+.g.v::before,.g.e::before{
+  content:""; position:absolute; left:50%; top:0; height:100%;
+  border-left:1px solid var(--rule-2);
+}
+.g.e::before{height:100%}
+.g.e.last::before{height:50%}
+.g.e::after{
+  content:""; position:absolute; left:50%; top:50%; width:60%;
+  border-top:1px solid var(--rule-2);
+}
+.tw{
+  flex:0 0 20px; align-self:center; width:20px; height:20px; padding:0; margin-right:2px;
+  border:1px solid var(--rule-2); background:var(--surface-2); color:var(--ink-2);
+  border-radius:2px; cursor:pointer; font:inherit; font-size:11px; line-height:1;
+  display:flex; align-items:center; justify-content:center;
+}
+.tw:hover{color:var(--ink); border-color:var(--rule)}
+.twspace{flex:0 0 22px}
+.mark{
+  flex:0 0 12px; align-self:center; height:12px; position:relative; margin-right:6px;
+}
+.mark::before{
+  content:""; position:absolute; inset:3px; border-radius:50%;
+  background:var(--c); opacity:.95;
+}
+.row[data-type="lake"] .mark::before{border-radius:50%; inset:1px; background:transparent; border:1.5px solid var(--c)}
+.row[data-type="canal"] .mark::before{inset:4px 0; border-radius:0; height:4px; top:4px; background:var(--c)}
+.row[data-type="coastal"] .mark::before{inset:2px; border-radius:1px; background:transparent; border:1.5px dotted var(--c)}
+.row[data-type="sea"] .mark::before{inset:1px; background:var(--c)}
+.nm{
+  align-self:center; font-family:var(--f-disp); font-size:15px; white-space:nowrap;
+  padding-right:10px;
+}
+.row[data-type="lake"] .nm{font-style:italic}
+.row[data-type="canal"] .nm{font-family:var(--f-mono); font-size:12.5px; letter-spacing:-.01em}
+.row[data-type="coastal"] .nm,.row[data-type="sea"] .nm{
+  font-family:var(--f-ui); text-transform:uppercase; letter-spacing:.13em;
+  font-size:11.5px; font-weight:600;
+}
+.row[data-depth="0"] .nm{font-size:13px; letter-spacing:.18em}
+.side{
+  align-self:center; font-family:var(--f-mono); font-size:10px; color:var(--ink-3);
+  border:1px solid var(--rule-2); border-radius:2px; padding:0 3px; margin-right:8px;
+}
+.cnt{
+  align-self:center; font-family:var(--f-mono); font-size:10.5px; color:var(--ink-3);
+  margin-right:10px;
+}
+.len{
+  align-self:center; font-family:var(--f-mono); font-size:11.5px; color:var(--ink-2);
+  font-variant-numeric:tabular-nums; text-align:right; width:86px; flex:0 0 86px;
+  margin-left:auto; padding-left:10px; white-space:nowrap;
+}
+.lenbar{
+  align-self:center; flex:0 0 70px; height:3px; background:var(--rule-2);
+  margin-left:9px; border-radius:2px; overflow:hidden;
+}
+.lenbar i{display:block; height:100%; background:var(--c); opacity:.75}
+
+/* ---------------------------------------------------------- map */
+.mapbox{
+  position:relative; border:1px solid var(--rule); background:var(--sea);
+  border-radius:3px; overflow:hidden; width:100%; max-width:800px; margin:0 auto;
+}
+.mapbox::after{
+  content:""; position:absolute; inset:5px; border:1px solid var(--rule-2);
+  pointer-events:none; border-radius:2px;
+}
+#map{display:block; width:100%; aspect-ratio:6796/8900; height:auto; touch-action:none; cursor:grab}
+#map.drag{cursor:grabbing}
+.mtools{
+  position:absolute; right:14px; top:14px; display:flex; flex-direction:column; gap:5px; z-index:3;
+}
+.mtools button{
+  width:32px; height:32px; border:1px solid var(--rule); background:var(--surface);
+  color:var(--ink-2); border-radius:2px; cursor:pointer; font:inherit; font-size:15px;
+  display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow);
+}
+.mtools button:hover{color:var(--ink)}
+.scalebar{
+  position:absolute; left:16px; bottom:16px; z-index:3; color:var(--ink-2);
+  font-family:var(--f-mono); font-size:10px; letter-spacing:.06em; user-select:none;
+  background:color-mix(in srgb,var(--surface) 78%,transparent); padding:4px 7px 3px; border-radius:2px;
+}
+.scalebar .sb{height:5px; border:1px solid var(--ink-2); border-top:0; margin-bottom:3px}
+.detail-level{display:flex; align-items:center; gap:8px; font-size:12.5px; color:var(--ink-2)}
+.detail-level input{width:104px; accent-color:var(--ink)}
+.rlabel{
+  font-family:var(--f-disp); font-style:italic; fill:var(--ink);
+  paint-order:stroke; stroke:var(--halo); stroke-linejoin:round; pointer-events:none;
+}
+.rlabel.minor{fill:var(--ink-2)}
+.clabel{
+  font-family:var(--f-ui); font-weight:600; letter-spacing:.16em; text-transform:uppercase;
+  fill:var(--ink-3); paint-order:stroke; stroke:var(--halo); pointer-events:none;
+}
+.llabel{
+  font-family:var(--f-disp); font-style:italic; fill:var(--lake-ink);
+  paint-order:stroke; stroke:var(--halo); pointer-events:none;
+}
+.citylabel{
+  font-family:var(--f-ui); font-weight:500; fill:var(--ink); letter-spacing:.01em;
+  paint-order:stroke; stroke:var(--halo); pointer-events:none;
+}
+.ctrylabel{
+  font-family:var(--f-ui); font-weight:600; letter-spacing:.28em; text-transform:uppercase;
+  fill:var(--ctry-ink); paint-order:stroke; stroke:var(--halo); pointer-events:none;
+}
+path.riv{fill:none; stroke-linecap:round; stroke-linejoin:round; cursor:pointer}
+path.riv.dim,circle.riv.dim{opacity:.12}
+path.hitline{fill:none; stroke:transparent; stroke-width:12px; cursor:pointer}
+circle.city{fill:var(--surface); stroke:var(--ink); stroke-width:1.2px; pointer-events:none}
+circle.city.big{fill:var(--ink)}
+
+/* ---------------------------------------------------------- legend */
+.legend{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:0;
+  border:1px solid var(--rule-2); border-radius:3px; margin-top:14px; overflow:hidden;
+}
+.lg{padding:13px 16px; border-right:1px solid var(--rule-2); border-bottom:1px solid var(--rule-2)}
+.lg h4{
+  margin:0 0 8px; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--ink-3); font-weight:600;
+}
+.lg ul{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:5px}
+.lg li{display:flex; align-items:center; gap:9px; font-size:12.5px; color:var(--ink-2)}
+.lg svg{flex:0 0 26px}
+
+/* ---------------------------------------------------------- detail */
+.detail{
+  position:fixed; z-index:20; right:18px; bottom:18px; width:min(340px,calc(100vw - 36px));
+  background:var(--surface); border:1px solid var(--rule); border-radius:3px;
+  box-shadow:var(--shadow); padding:15px 16px 14px; display:none;
+}
+.detail.on{display:block}
+.detail .x{
+  position:absolute; right:8px; top:8px; width:24px; height:24px; border:0; padding:0;
+  background:transparent; color:var(--ink-3); cursor:pointer; font-size:16px; line-height:1;
+}
+.detail .x:hover{color:var(--ink)}
+.dpath{
+  font-family:var(--f-mono); font-size:10.5px; color:var(--ink-3); letter-spacing:.02em;
+  margin:0 22px 7px 0; line-height:1.5;
+}
+.dpath button{
+  border:0; background:transparent; padding:0; font:inherit; color:var(--ink-2);
+  cursor:pointer; text-decoration:underline; text-underline-offset:2px;
+}
+.dpath button:hover{color:var(--sel)}
+.dname{font-family:var(--f-disp); font-size:24px; font-weight:500; margin:0 0 2px; line-height:1.15}
+.dsub{font-size:12px; color:var(--ink-2); margin:0 0 11px}
+.dtab{
+  width:100%; border-collapse:collapse; font-size:12.5px; margin-bottom:10px;
+}
+.dtab td{padding:3px 0; vertical-align:top; border-bottom:1px solid var(--rule-2)}
+.dtab td:first-child{color:var(--ink-3); width:38%; font-size:11px; letter-spacing:.06em; text-transform:uppercase; padding-top:5px}
+.dtab td:last-child{font-family:var(--f-mono); font-size:12px; text-align:right}
+.dnote{font-family:var(--f-disp); font-size:13.5px; color:var(--ink-2); margin:0 0 12px; line-height:1.5}
+.dacts{display:flex; gap:7px}
+.dacts button{
+  flex:1; font:inherit; font-size:12px; font-weight:500; cursor:pointer; padding:6px 8px;
+  background:var(--surface-2); color:var(--ink); border:1px solid var(--rule-2); border-radius:2px;
+}
+.dacts button:hover{border-color:var(--rule)}
+
+footer{
+  margin-top:56px; padding-top:22px; border-top:1px solid var(--rule);
+  font-size:12.5px; color:var(--ink-2); max-width:70ch;
+}
+footer h4{margin:0 0 6px; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3)}
+footer p{margin:0 0 12px}
+
+@media (max-width:760px){
+  :root{--ind:14px; --rowh:30px}
+  .wrap{padding:0 14px 90px}
+  .mast{padding:34px 0 20px}
+  .fig{flex:1 1 44%; border-right:0}
+  .len{width:74px; flex:0 0 74px; font-size:10.5px}
+  .lenbar{display:none}
+  .detail{right:10px; left:10px; bottom:10px; width:auto}
+}
+@media (prefers-reduced-motion:no-preference){
+  path.riv,.row{transition:opacity .18s ease}
+}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <p class="eyebrow">Hydrologische Übersicht · {{n_waters}} Gewässer · Stand {{year}}</p>
+  <h1>Gewässerstammbaum <em>Deutschland</em></h1>
+  <p class="lede">Jeder Bach mündet in einen Fluss, jeder Fluss in einen Strom, jeder Strom in ein
+  Meer. Diese Abstammungslinie ist eindeutig — und darum lässt sich das gesamte Gewässernetz
+  Deutschlands als Stammbaum lesen: drei Meere als Wurzeln, darunter Ströme, Nebenflüsse und deren
+  Zuflüsse bis zur {{max_order_word}} Ordnung. Unten dieselbe Ordnung, in die Landkarte zurückübersetzt.</p>
+  <div class="figs" id="figs"></div>
+</header>
+
+<section id="stammbaum">
+  <div class="shead"><h2>Der Stammbaum</h2><span class="snum">Teil I</span></div>
+  <p class="sintro">Eingerückt nach Ordnung: Ordnung 1 mündet unmittelbar ins Meer, Ordnung 2 in
+  einen Strom, und so fort. Die Reihenfolge der Geschwister folgt dem Lauf des Vorfluters von der
+  Quelle zur Mündung — wer weiter unten steht, mündet weiter flussabwärts. Zeile antippen öffnet
+  das Datenblatt, das Dreieck klappt die Zuflüsse auf.</p>
+
+  <div class="bar">
+    <label class="search">
+      <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><circle cx="7" cy="7" r="4.5" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.5 10.5 14 14" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <input id="q" type="search" placeholder="Gewässer suchen — Mosel, Bodensee, Peene …" autocomplete="off">
+    </label>
+    <button class="chip c-nordsee" data-sea="nordsee" aria-pressed="true"><i class="dot"></i>Nordsee</button>
+    <button class="chip c-ostsee" data-sea="ostsee" aria-pressed="true"><i class="dot"></i>Ostsee</button>
+    <button class="chip c-schwarzes_meer" data-sea="schwarzes_meer" aria-pressed="true"><i class="dot"></i>Schwarzes Meer</button>
+    <span class="spacer"></span>
+    <button class="chip" id="expandAll">Alles ausklappen</button>
+    <button class="chip" id="collapseAll">Einklappen</button>
+  </div>
+
+  <div class="treebox" id="treebox"><div class="tree" id="tree"></div></div>
+</section>
+
+<section id="karte">
+  <div class="shead"><h2>Die Karte</h2><span class="snum">Teil II</span></div>
+  <p class="sintro">Dieselbe Ordnung, geografisch verortet. {{n_surveyed}} Flussläufe sind aus vermessenen
+  Gewässerlinien übernommen und zeigen den echten Verlauf mit allen Schlingen; {{n_schematic}} meist kurze
+  Zuflüsse sind zwischen belegter Quelle und belegter Mündung schematisch geführt und heller
+  gezeichnet. Die Kanäle folgen belegten Wegpunkten — Schleusen, Kanalkreuzen, durchfahrenen
+  Städten — und sind deshalb eckig statt geschwungen. Staatsgrenzen, Bundesländer, Seen und
+  {{n_cities}} Städte dienen als Orientierung. Auf ein Gewässer tippen hebt seinen Weg bis ins Meer hervor.</p>
+
+  <div class="bar">
+    <label class="detail-level">Detailgrad
+      <input id="lod" type="range" min="1" max="3" step="1" value="2" aria-label="Detailgrad">
+      <span id="lodtxt" style="font-family:var(--f-mono);font-size:11.5px">mittel</span>
+    </label>
+    <span class="spacer"></span>
+    <button class="chip" data-layer="canal" aria-pressed="true">Kanäle</button>
+    <button class="chip" data-layer="lake" aria-pressed="true">Seen</button>
+    <button class="chip" data-layer="coastal" aria-pressed="true">Küstengewässer</button>
+    <button class="chip" data-layer="city" aria-pressed="true">Städte</button>
+    <button class="chip" data-layer="states" aria-pressed="true">Bundesländer</button>
+    <button class="chip" id="fitAll">Ganz Deutschland</button>
+  </div>
+
+  <div class="mapbox">
+    <svg id="map" role="img" aria-label="Karte der Gewässer Deutschlands"></svg>
+    <div class="mtools">
+      <button id="zin" title="Vergrössern" aria-label="Vergrössern">+</button>
+      <button id="zout" title="Verkleinern" aria-label="Verkleinern">−</button>
+    </div>
+    <div class="scalebar" id="scalebar"><div class="sb"></div><span>100 km</span></div>
+  </div>
+
+  <div class="legend">
+    <div class="lg">
+      <h4>Einzugsgebiet</h4>
+      <ul>
+        <li><svg width="26" height="10"><path d="M0 5h26" stroke="var(--nordsee)" stroke-width="2.5"/></svg>Nordsee — {{n_nordsee}} Gewässer</li>
+        <li><svg width="26" height="10"><path d="M0 5h26" stroke="var(--ostsee)" stroke-width="2.5"/></svg>Ostsee — {{n_ostsee}} Gewässer</li>
+        <li><svg width="26" height="10"><path d="M0 5h26" stroke="var(--donau)" stroke-width="2.5"/></svg>Schwarzes Meer — {{n_schwarzes_meer}} Gewässer</li>
+      </ul>
+    </div>
+    <div class="lg">
+      <h4>Verlauf</h4>
+      <ul>
+        <li><svg width="26" height="10"><path d="M0 7c4-4 6 2 10-1s6 2 16-3" fill="none" stroke="var(--nordsee)" stroke-width="2.2"/></svg>vermessener Lauf ({{n_surveyed}})</li>
+        <li><svg width="26" height="10"><path d="M0 7c8-5 18-1 26-4" fill="none" stroke="var(--nordsee)" stroke-width="1.4" opacity=".45"/></svg>schematisch geführt ({{n_schematic}})</li>
+        <li><svg width="26" height="10"><path d="M1 8 9 4l6 1 10-5" fill="none" stroke="var(--ink-2)" stroke-width="1.8" stroke-dasharray="5 3"/></svg>Kanal, nach Wegpunkten ({{n_canal_routes}})</li>
+        <li><svg width="26" height="10"><path d="M1 8 9 4l6 1 10-5" fill="none" stroke="var(--ink-2)" stroke-width="1.5" stroke-dasharray="1.5 3" opacity=".6"/></svg>Kanal, historisch</li>
+      </ul>
+    </div>
+    <div class="lg">
+      <h4>Strichstärke</h4>
+      <ul>
+        <li><svg width="26" height="10"><path d="M0 5h26" stroke="var(--ink-2)" stroke-width="4"/></svg>über 500 km</li>
+        <li><svg width="26" height="10"><path d="M0 5h26" stroke="var(--ink-2)" stroke-width="2.2"/></svg>100 bis 500 km</li>
+        <li><svg width="26" height="10"><path d="M0 5h26" stroke="var(--ink-2)" stroke-width="1"/></svg>unter 100 km</li>
+      </ul>
+    </div>
+    <div class="lg">
+      <h4>Orientierung</h4>
+      <ul>
+        <li><svg width="26" height="10"><circle cx="13" cy="5" r="2.6" fill="var(--ink)"/></svg>Stadt als Referenzpunkt</li>
+        <li><svg width="26" height="10"><path d="M2 8 8 3l7 4 9-5" fill="none" stroke="var(--border)" stroke-width="1.4"/></svg>Staatsgrenze</li>
+        <li><svg width="26" height="10"><path d="M2 8 8 3l7 4 9-5" fill="none" stroke="var(--land-line)" stroke-width="1"/></svg>Bundesland</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <h4>Datengrundlage und Methodik</h4>
+  <p>{{n_waters}} Einträge: {{n_river}} Fliessgewässer, {{n_lake}} Seen und Talsperren, {{n_coastal}} Küstengewässer, {{n_canal}} Kanäle,
+  {{n_sea}} Meere. Aufgenommen sind Gewässer mit Deutschlandbezug — auch ausländische Ober- und Unterläufe
+  deutscher Flüsse, damit die Abstammungslinie bis zum Meer geschlossen bleibt. Längen, Mündungsorte
+  und Mündungsufer stammen aus der deutschsprachigen Wikipedia.</p>
+  <p>Die Karte: {{n_surveyed}} Flussläufe stammen aus vermessenen Gewässerlinien (GSHHG/WDBII in voller
+  Auflösung) und wurden über Quell- und Mündungskoordinate dem jeweiligen Gewässer zugeordnet — sie
+  zeigen den echten Verlauf. Die übrigen {{n_schematic}}, meist unter 100 km lang, sind zwischen belegter Quelle
+  und belegter Mündung schematisch geführt und deshalb heller und dünner gezeichnet; ihre Krümmung
+  folgt der Sinuosität, also dem Verhältnis von Flusslänge zu Luftlinie. Mündungspunkte sind auf den
+  Lauf des Vorfluters gerastert, damit die Karte topologisch mit dem Stammbaum übereinstimmt.
+  Küstenlinie, Staatsgrenzen, Bundesländer, Seeflächen und Städte stammen aus Natural Earth (10 m).</p>
+  <p>Die Kanäle sind einzeln gegen die Wikipedia geprüft: Länge, Anfangs- und Endpunkt, das
+  Gewässer, in das sie übergehen, und ihr Betriebszustand. Ihre Linienführung folgt belegten
+  Zwischenpunkten, nicht einer Interpolation. Dabei korrigiert: der Mittellandkanal geht bei
+  Hohenwarthe in den Elbe-Havel-Kanal über und quert die Elbe nur auf einer Brücke; der
+  Datteln-Hamm-Kanal zweigt vom Dortmund-Ems-Kanal ab, statt in die Lippe zu münden; der
+  Ems-Jade-Kanal endet im Jadebusen. Der Ludwigskanal und der Eiderkanal sind als historische,
+  ausser Betrieb stehende Wasserstrassen gekennzeichnet. Der Rhein-Marne- und der
+  Rhein-Rhône-Kanal sind entfallen, weil sie vollständig in Frankreich liegen.</p>
+  <p>Seen und Talsperren hängen an dem Gewässer, in das sie entwässern — auch wenn dazwischen ein
+  kurzer Abfluss liegt, der hier nicht eigens geführt wird.</p>
+</footer>
+
+</div>
+
+<aside class="detail" id="detail" aria-live="polite">
+  <button class="x" id="dclose" aria-label="Datenblatt schliessen">×</button>
+  <p class="dpath" id="dpath"></p>
+  <h3 class="dname" id="dname"></h3>
+  <p class="dsub" id="dsub"></p>
+  <table class="dtab"><tbody id="dtab"></tbody></table>
+  <p class="dnote" id="dnote"></p>
+  <div class="dacts">
+    <button id="dtree">Im Stammbaum</button>
+    <button id="dmap">Auf der Karte</button>
+  </div>
+</aside>
+
+<script type="application/json" id="data">__DATA__</script>
+<script>
+(function(){
+"use strict";
+const D = JSON.parse(document.getElementById('data').textContent);
+const W = D.waters, LINES = D.lines, STATES = D.states;
+const BY = {}; W.forEach(w => BY[w.id] = w);
+const SEA_COLOR = {nordsee:'var(--nordsee)', ostsee:'var(--ostsee)', schwarzes_meer:'var(--donau)'};
+const TYPE_LABEL = {river:'Fliessgewässer', lake:'See', canal:'Kanal', coastal:'Küstengewässer', sea:'Meer'};
+const STATE_NAME = {BW:'Baden-Württemberg',BY:'Bayern',BE:'Berlin',BB:'Brandenburg',HB:'Bremen',
+  HH:'Hamburg',HE:'Hessen',MV:'Mecklenburg-Vorpommern',NI:'Niedersachsen',NW:'Nordrhein-Westfalen',
+  RP:'Rheinland-Pfalz',SL:'Saarland',SN:'Sachsen',ST:'Sachsen-Anhalt',SH:'Schleswig-Holstein',
+  TH:'Thüringen',AUT:'Österreich',CHE:'Schweiz',FRA:'Frankreich',LUX:'Luxemburg',NLD:'Niederlande',
+  BEL:'Belgien',CZE:'Tschechien',POL:'Polen',DNK:'Dänemark'};
+
+/* ------------------------------------------------- hierarchy + ordering */
+const KIDS = {};
+W.forEach(w => { const p = w.parent; if(!p) return; (KIDS[p] = KIDS[p] || []).push(w.id); });
+
+function projT(parentId, mouth){
+  const l = LINES[parentId];
+  if(!l || !mouth) return null;
+  let best = Infinity, bi = 0;
+  for(let i=0;i<l.length;i++){
+    const dy=(l[i][0]-mouth[0])*111.2, dx=(l[i][1]-mouth[1])*70;
+    const d=dy*dy+dx*dx;
+    if(d<best){best=d;bi=i;}
+  }
+  return bi/Math.max(1,l.length-1);
+}
+Object.keys(KIDS).forEach(pid => {
+  const arr = KIDS[pid];
+  const t = {};
+  arr.forEach(id => {
+    const v = projT(pid, BY[id].mouth);
+    t[id] = (v === null) ? null : v;
+  });
+  const anyT = arr.some(id => t[id] !== null);
+  arr.sort((a,b) => {
+    if(anyT && t[a] !== null && t[b] !== null && Math.abs(t[a]-t[b]) > 1e-6) return t[a]-t[b];
+    const la = BY[a].length_km || BY[a].area_km2 || 0, lb = BY[b].length_km || BY[b].area_km2 || 0;
+    if(lb !== la) return lb - la;
+    return BY[a].name.localeCompare(BY[b].name,'de');
+  });
+});
+const ROOTS = W.filter(w => !w.parent).map(w => w.id);
+/* seas keep the order of data/waters/meere.json: Nordsee, Ostsee, Schwarzes Meer */
+
+const DEPTH = {}, DESC = {};
+ROOTS.forEach(r => (function w2(id,d){ DEPTH[id]=d; let n=0;
+  (KIDS[id]||[]).forEach(c=>{ n += 1 + w2(c,d+1); }); DESC[id]=n; return n; })(r,0));
+
+function chain(id){ const out=[]; let c=id; while(c){ out.unshift(c); c = BY[c].parent; } return out; }
+
+/* ------------------------------------------------- figures */
+const counts = {river:0, lake:0, canal:0, coastal:0, sea:0};
+W.forEach(w => counts[w.type]++);
+const figs = [
+  [String(W.length),'Gewässer gesamt'], [String(counts.river),'Fliessgewässer'],
+  [String(counts.lake),'Seen und Talsperren'], [String(counts.canal),'Kanäle'],
+  [String(counts.coastal),'Küstengewässer'], ['3','Meere als Wurzel']
+];
+document.getElementById('figs').innerHTML = figs.map(f =>
+  `<div class="fig"><b>${f[0]}</b><span>${f[1]}</span></div>`).join('');
+
+/* ------------------------------------------------- tree */
+const open = new Set(ROOTS);
+const seaOn = {nordsee:true, ostsee:true, schwarzes_meer:true};
+let query = '', matches = null, selected = null;
+
+const treeEl = document.getElementById('tree');
+const boxEl = document.getElementById('treebox');
+
+function fmtLen(w){
+  if(w.type === 'lake' || w.type === 'coastal')
+    return w.area_km2 ? (w.area_km2 >= 100 ? Math.round(w.area_km2) : w.area_km2) + ' km²' : '';
+  return w.length_km ? (w.length_km >= 100 ? Math.round(w.length_km) : w.length_km) + ' km' : '';
+}
+function visible(id){
+  if(!seaOn[BY[id].sea]) return false;
+  if(matches) return matches.has(id);
+  return true;
+}
+function buildRows(){
+  const rows = [];
+  function rec(id, anc){
+    if(!visible(id)) return;
+    rows.push({id:id, anc:anc.slice()});
+    const kids = (KIDS[id]||[]).filter(visible);
+    if(!open.has(id) || !kids.length) return;
+    kids.forEach((c,i) => { anc.push(i === kids.length-1); rec(c, anc); anc.pop(); });
+  }
+  ROOTS.forEach(r => rec(r, []));
+  return rows;
+}
+function renderTree(){
+  const rows = buildRows();
+  const html = rows.map(r => {
+    const w = BY[r.id];
+    const kids = (KIDS[r.id]||[]).filter(visible);
+    let g = '';
+    r.anc.forEach((isLast, i) => {
+      const last = i === r.anc.length-1;
+      g += `<span class="g ${last ? 'e' : (isLast ? '' : 'v')}${last && isLast ? ' last' : ''}"></span>`;
+    });
+    const tw = kids.length
+      ? `<button class="tw" data-tw="${r.id}" aria-label="${open.has(r.id)?'Zuklappen':'Aufklappen'}">${open.has(r.id)?'▾':'▸'}</button>`
+      : `<span class="twspace"></span>`;
+    const len = fmtLen(w);
+    const maxL = 900;
+    const bar = w.length_km ? `<span class="lenbar"><i style="width:${Math.min(100, (w.length_km/maxL)*100).toFixed(1)}%"></i></span>` : `<span class="lenbar" style="visibility:hidden"></span>`;
+    const side = w.side ? `<span class="side">${w.side.toLowerCase()}</span>` : '';
+    const cnt = kids.length ? `<span class="cnt">${DESC[r.id]}</span>` : '';
+    const hit = matches && query && w.name.toLowerCase().includes(query) ? ' hit' : '';
+    return `<div class="row${selected===r.id?' sel':''}${hit}" data-id="${r.id}" data-type="${w.type}" data-depth="${DEPTH[r.id]}" style="--c:${SEA_COLOR[w.sea]||'var(--ink-2)'}" tabindex="0" role="treeitem">`
+      + g + tw + `<span class="mark"></span><span class="nm">${w.name}</span>${side}${cnt}`
+      + `<span class="len">${len}</span>${bar}</div>`;
+  }).join('');
+  treeEl.innerHTML = html || `<div style="padding:26px 20px;color:var(--ink-2);font-size:14px">Kein Gewässer gefunden.</div>`;
+}
+
+treeEl.addEventListener('click', e => {
+  const tw = e.target.closest('[data-tw]');
+  if(tw){ const id = tw.dataset.tw; open.has(id) ? open.delete(id) : open.add(id); renderTree(); return; }
+  const row = e.target.closest('.row');
+  if(row) select(row.dataset.id, 'tree');
+});
+treeEl.addEventListener('keydown', e => {
+  const row = e.target.closest('.row');
+  if(!row) return;
+  if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); select(row.dataset.id, 'tree'); }
+  if(e.key === 'ArrowRight'){ open.add(row.dataset.id); renderTree(); }
+  if(e.key === 'ArrowLeft'){ open.delete(row.dataset.id); renderTree(); }
+});
+
+document.getElementById('q').addEventListener('input', e => {
+  query = e.target.value.trim().toLowerCase();
+  if(!query){ matches = null; }
+  else {
+    matches = new Set();
+    W.forEach(w => {
+      if(w.name.toLowerCase().includes(query) || (w.mouth_place||'').toLowerCase().includes(query)){
+        chain(w.id).forEach(c => matches.add(c));
+        (function down(i){ (KIDS[i]||[]).forEach(k => { matches.add(k); down(k); }); })(w.id);
+      }
+    });
+    matches.forEach(id => open.add(id));
+  }
+  renderTree();
+});
+document.querySelectorAll('[data-sea]').forEach(b => b.addEventListener('click', () => {
+  const s = b.dataset.sea; seaOn[s] = !seaOn[s];
+  b.setAttribute('aria-pressed', String(seaOn[s]));
+  renderTree(); drawLines();
+}));
+document.getElementById('expandAll').addEventListener('click', () => {
+  W.forEach(w => { if((KIDS[w.id]||[]).length) open.add(w.id); }); renderTree();
+});
+document.getElementById('collapseAll').addEventListener('click', () => {
+  open.clear(); ROOTS.forEach(r => open.add(r)); renderTree();
+});
+
+/* ------------------------------------------------- map */
+const BASE_D = D.base, SRC = D.src;
+const K = Math.cos(51*Math.PI/180), SC = 1000;
+const px = lon => lon*K*SC, py = lat => -lat*SC;
+const map = document.getElementById('map');
+const NS = 'http://www.w3.org/2000/svg';
+function el(n, attrs){ const e = document.createElementNS(NS, n);
+  for(const k in attrs) e.setAttribute(k, attrs[k]); return e; }
+
+const gOcean = el('g',{}), gLand = el('g',{}), gStates = el('g',{}), gBorder = el('g',{}),
+      gLake = el('g',{}), gCanal = el('g',{}), gRivS = el('g',{}), gRivR = el('g',{}),
+      gHit = el('g',{}), gCity = el('g',{}), gLab = el('g',{});
+map.append(gOcean, gLand, gStates, gBorder, gLake, gCanal, gRivS, gRivR, gHit, gCity, gLab);
+
+const BOUNDS = {la0:46.60, la1:55.35, lo0:5.30, lo1:15.75};
+const X0 = px(BOUNDS.lo0), X1 = px(BOUNDS.lo1), Y0 = py(BOUNDS.la1), Y1 = py(BOUNDS.la0);
+const BASEVB = {x:X0, y:Y0, w:X1-X0, h:Y1-Y0};
+let vb = Object.assign({}, BASEVB);
+let LOD = 2;
+
+function ringsPath(rings){
+  return rings.map(r => 'M' + r.map(p => px(p[1]).toFixed(1)+' '+py(p[0]).toFixed(1)).join('L') + 'Z').join('');
+}
+/* --- static base layers --- */
+gOcean.appendChild(el('path',{d:ringsPath(BASE_D.ocean), fill:'var(--sea)', 'fill-rule':'evenodd'}));
+BASE_D.countries.forEach(c => {
+  gLand.appendChild(el('path',{d:ringsPath(c.rings), 'fill-rule':'evenodd',
+    fill: c.iso === 'DEU' ? 'var(--land)' : 'var(--land-2)'}));
+  gBorder.appendChild(el('path',{d:ringsPath(c.rings), fill:'none', stroke:'var(--border)',
+    'stroke-width':1.1, 'stroke-linejoin':'round', 'vector-effect':'non-scaling-stroke'}));
+});
+STATES.forEach(s => gStates.appendChild(el('path',{d:ringsPath(s.rings), fill:'none',
+  stroke:'var(--land-line)', 'stroke-width':0.85, 'vector-effect':'non-scaling-stroke'})));
+BASE_D.lakes.forEach(l => gLake.appendChild(el('path',{d:ringsPath(l.rings), 'fill-rule':'evenodd',
+  fill:'var(--sea)', stroke:'var(--lake-ink)', 'stroke-width':0.6, 'stroke-opacity':.55,
+  'vector-effect':'non-scaling-stroke'})));
+
+/* --- helpers --- */
+function smooth(pts){
+  if(pts.length < 2) return '';
+  const P = pts.map(p => [px(p[1]), py(p[0])]);
+  if(P.length === 2) return 'M'+P[0][0].toFixed(1)+' '+P[0][1].toFixed(1)+'L'+P[1][0].toFixed(1)+' '+P[1][1].toFixed(1);
+  let d = 'M'+P[0][0].toFixed(1)+' '+P[0][1].toFixed(1);
+  for(let i=0;i<P.length-1;i++){
+    const p0 = P[i-1] || P[i], p1 = P[i], p2 = P[i+1], p3 = P[i+2] || P[i+1];
+    const c1 = [p1[0]+(p2[0]-p0[0])/6, p1[1]+(p2[1]-p0[1])/6];
+    const c2 = [p2[0]-(p3[0]-p1[0])/6, p2[1]-(p3[1]-p1[1])/6];
+    d += 'C'+c1[0].toFixed(1)+' '+c1[1].toFixed(1)+','+c2[0].toFixed(1)+' '+c2[1].toFixed(1)
+       + ','+p2[0].toFixed(1)+' '+p2[1].toFixed(1);
+  }
+  return d;
+}
+function polyline(pts){
+  return 'M' + pts.map(p => px(p[1]).toFixed(1)+' '+py(p[0]).toFixed(1)).join('L');
+}
+function strokeW(w){
+  const L = w.length_km || 25;
+  return Math.max(0.6, Math.min(4.6, Math.pow(L/130, 0.62)*1.75));
+}
+function layerOn(t){
+  const b = document.querySelector('[data-layer="'+t+'"]');
+  return !b || b.getAttribute('aria-pressed') === 'true';
+}
+function lodOk(w){
+  if(LOD >= 3) return true;
+  const L = w.length_km || 0;
+  if(LOD === 1) return L >= 180 || DEPTH[w.id] <= 1 || w.type === 'lake' && (w.area_km2||0) >= 60;
+  return SRC[w.id] !== 'schema' || L >= 60 || (w.type === 'lake' && (w.area_km2||0) >= 12);
+}
+function mapVisible(w){
+  if(!seaOn[w.sea]) return false;
+  if(w.type === 'canal') return layerOn('canal') && lodOk(w);
+  if(w.type === 'lake') return layerOn('lake') && lodOk(w);
+  if(w.type === 'coastal') return layerOn('coastal');
+  if(w.type === 'sea') return false;
+  return lodOk(w);
+}
+
+/* --- rivers, canals, lake markers --- */
+const pathOf = {};
+function drawLines(){
+  [gCanal, gRivS, gRivR, gHit].forEach(g => g.textContent = '');
+  W.forEach(w => {
+    if(w.type === 'sea' || w.type === 'coastal' || w.type === 'lake') return;
+    if(!mapVisible(w)) return;
+    const line = LINES[w.id]; if(!line || line.length < 2) return;
+    const isCanal = w.type === 'canal';
+    const d = isCanal ? polyline(line) : smooth(line);
+    const real = SRC[w.id] !== 'schema';
+    const p = el('path',{d:d, class:'riv', 'data-id':w.id, 'vector-effect':'non-scaling-stroke',
+      stroke: isCanal ? 'var(--ink-2)' : SEA_COLOR[w.sea],
+      'stroke-width': (strokeW(w)*(real ? 1 : 0.78)).toFixed(2),
+      'stroke-opacity': isCanal ? (w.historic ? 0.5 : 0.8) : (real ? 1 : 0.42),
+      'stroke-dasharray': isCanal ? (w.historic ? '1.5 3' : '6 3.5') : ''});
+    (isCanal ? gCanal : (real ? gRivR : gRivS)).appendChild(p);
+    pathOf[w.id] = p;
+    gHit.appendChild(el('path',{d:d, class:'hitline', 'vector-effect':'non-scaling-stroke','data-id':w.id}));
+  });
+  W.forEach(w => {
+    if(w.type !== 'lake' || !mapVisible(w) || !w.source) return;
+    const a = w.area_km2 || 3;
+    if(a >= 40) return;                        /* larger lakes come from the polygon layer */
+    const r = Math.max(9, Math.sqrt(a/Math.PI)*(SC/111.2));
+    const c = el('circle',{cx:px(w.source[1]).toFixed(1), cy:py(w.source[0]).toFixed(1),
+      r:r.toFixed(1), fill:'var(--sea)', stroke:'var(--lake-ink)', 'stroke-width':0.9,
+      'stroke-opacity':.7, 'vector-effect':'non-scaling-stroke', class:'riv', 'data-id':w.id,
+      style:'cursor:pointer'});
+    gLake.appendChild(c); pathOf[w.id] = c;
+  });
+  buildLabels(); applyHighlight();
+}
+
+/* --- cities --- */
+const cityNodes = [];
+function drawCities(){
+  gCity.textContent = ''; cityNodes.length = 0;
+  if(!layerOn('city')) return;
+  BASE_D.cities.forEach(c => {
+    const big = c.pop >= 500000;
+    const n = el('circle',{cx:px(c.lon).toFixed(1), cy:py(c.lat).toFixed(1),
+      class:'city'+(big?' big':''), r:2.4});
+    n.dataset.r = big ? 2.9 : 2.1;
+    n.dataset.minz = c.pop >= 450000 ? 1 : c.pop >= 200000 ? 1.35 : c.de ? 1.9 : 1.2;
+    gCity.appendChild(n); cityNodes.push(n);
+  });
+}
+
+/* --- labels with collision handling --- */
+let labelDefs = [];
+function addLabel(txt, lat, lon, cls, fs, prio, minZ, ang, anchor, dx){
+  const x = px(lon), y = py(lat);
+  const t = el('text',{class:cls, 'text-anchor':anchor||'middle', 'font-size':fs, x:x, y:y});
+  t.textContent = txt;
+  if(ang) t.setAttribute('transform','rotate('+ang.toFixed(1)+' '+x.toFixed(1)+' '+y.toFixed(1)+')');
+  gLab.appendChild(t);
+  labelDefs.push({el:t, x:x, y:y, fs:fs, prio:prio, minZ:minZ, dx:dx||0,
+    w:txt.length*fs*0.52 + 4, h:fs*1.15, id:null});
+  return labelDefs[labelDefs.length-1];
+}
+function buildLabels(){
+  gLab.textContent = ''; labelDefs = [];
+  BASE_D.countries.forEach(c => {
+    if(c.iso === 'DEU') return;
+    addLabel(c.name, c.label[0], c.label[1], 'ctrylabel', 9, 30, 1);
+  });
+  W.forEach(w => {
+    if(!mapVisible(w)) return;
+    const L = w.length_km || 0;
+    if(w.type === 'river' || w.type === 'canal'){
+      const l = LINES[w.id]; if(!l || l.length < 2) return;
+      const i = Math.max(1, Math.round(l.length*0.55));
+      const a = l[i-1], b = l[Math.min(l.length-1, i+1)];
+      let ang = Math.atan2(py(b[0])-py(a[0]), px(b[1])-px(a[1]))*180/Math.PI;
+      if(ang > 90) ang -= 180; if(ang < -90) ang += 180;
+      const fs = w.type === 'canal' ? 8.5 : L >= 400 ? 14 : L >= 200 ? 12 : L >= 100 ? 10.5 : 9.2;
+      const minZ = L >= 400 ? 1 : L >= 200 ? 1 : L >= 100 ? 1.5 : L >= 50 ? 2.4 : 3.4;
+      const d = addLabel(w.name, l[i][0], l[i][1],
+        w.type === 'canal' ? 'clabel' : ('rlabel' + (L < 100 ? ' minor' : '')),
+        fs, 100 + L, minZ, ang);
+      d.id = w.id;
+    } else if(w.type === 'lake'){
+      const a = w.area_km2 || 0;
+      const d = addLabel(w.name, w.source[0], w.source[1], 'llabel',
+        a >= 100 ? 10.5 : 9, 60 + a/10, a >= 200 ? 1 : a >= 40 ? 1.8 : 3, 0);
+      d.id = w.id;
+    } else if(w.type === 'coastal'){
+      const a = w.area_km2 || 0;
+      const d = addLabel(w.name, w.source[0], w.source[1], 'clabel', 8.5, 40 + a/50,
+        a >= 400 ? 1.2 : 2.6, 0);
+      d.id = w.id;
+    }
+  });
+  if(layerOn('city')){
+    BASE_D.cities.forEach(c => {
+      const minZ = c.pop >= 450000 ? 1 : c.pop >= 200000 ? 1.35 : c.de ? 1.9 : 1.2;
+      addLabel(c.n, c.lat, c.lon, 'citylabel', c.pop >= 500000 ? 10.5 : 9.2,
+        500 + c.pop/1000, minZ, 0, 'start', 6);
+    });
+  }
+  labelDefs.sort((a, b) => b.prio - a.prio);
+  labelDefs.forEach(d => gLab.appendChild(d.el));
+  setVB();
+}
+function placeLabels(){
+  const rect = map.getBoundingClientRect();
+  if(!rect.width) return;
+  const upp = vb.w / rect.width;
+  const z = BASEVB.w / vb.w;
+  const boxes = [];
+  const chain0 = selected ? new Set(chain(selected)) : null;
+  for(const d of labelDefs){
+    const t = d.el;
+    t.setAttribute('font-size', (d.fs*upp).toFixed(2));
+    t.setAttribute('stroke-width', (3*upp).toFixed(2));
+    if(d.dx) t.setAttribute('x', (d.x + d.dx*upp).toFixed(1));
+    const forced = chain0 && d.id && chain0.has(d.id);
+    if(z < d.minZ && !forced){ t.style.display = 'none'; continue; }
+    const cx = (d.x - vb.x)/upp + (d.dx || 0), cy = (d.y - vb.y)/upp;
+    if(cx < -30 || cy < -20 || cx > rect.width+30 || cy > rect.height+20){ t.style.display='none'; continue; }
+    const half = d.dx ? 0 : d.w/2;
+    const b = [cx - half, cy - d.h*0.6, cx - half + d.w, cy + d.h*0.4];
+    let hit = false;
+    for(let i=0;i<boxes.length;i++){
+      const o = boxes[i];
+      if(b[0] < o[2] && b[2] > o[0] && b[1] < o[3] && b[3] > o[1]){ hit = true; break; }
+    }
+    if(hit && !forced){ t.style.display = 'none'; continue; }
+    t.style.display = ''; boxes.push(b);
+  }
+  cityNodes.forEach(n => {
+    n.setAttribute('r', (parseFloat(n.dataset.r)*upp).toFixed(2));
+    n.setAttribute('stroke-width', (1.2*upp).toFixed(2));
+    n.style.display = z >= parseFloat(n.dataset.minz) ? '' : 'none';
+  });
+}
+function setVB(){
+  map.setAttribute('viewBox', vb.x.toFixed(1)+' '+vb.y.toFixed(1)+' '+vb.w.toFixed(1)+' '+vb.h.toFixed(1));
+  placeLabels(); updateScale();
+}
+function updateScale(){
+  const rect = map.getBoundingClientRect();
+  if(!rect.width) return;
+  const pxPerUnit = rect.width / vb.w;
+  let wpx = (100/111.2*SC) * pxPerUnit, label = '100 km';
+  if(wpx > 190){ wpx /= 2; label = '50 km'; }
+  if(wpx > 190){ wpx /= 5; label = '10 km'; }
+  if(wpx < 42){ wpx *= 5; label = '500 km'; }
+  const sb = document.getElementById('scalebar');
+  sb.querySelector('.sb').style.width = Math.round(wpx)+'px';
+  sb.querySelector('span').textContent = label;
+}
+
+/* --- controls --- */
+const LODTXT = {1:'gering', 2:'mittel', 3:'alles'};
+document.getElementById('lod').addEventListener('input', e => {
+  LOD = +e.target.value;
+  document.getElementById('lodtxt').textContent = LODTXT[LOD];
+  drawLines();
+});
+document.querySelectorAll('[data-layer]').forEach(b => b.addEventListener('click', () => {
+  const on = b.getAttribute('aria-pressed') !== 'true';
+  b.setAttribute('aria-pressed', String(on));
+  if(b.dataset.layer === 'states'){ gStates.style.display = on ? '' : 'none'; return; }
+  if(b.dataset.layer === 'city'){ drawCities(); buildLabels(); return; }
+  drawLines();
+}));
+
+/* --- zoom & pan --- */
+function clampVB(){
+  vb.w = Math.max(BASEVB.w*0.035, Math.min(BASEVB.w*1.3, vb.w));
+  vb.h = vb.w * (BASEVB.h/BASEVB.w);
+  const mx = BASEVB.w*0.18, my = BASEVB.h*0.18;
+  vb.x = Math.max(BASEVB.x-mx, Math.min(BASEVB.x+BASEVB.w+mx-vb.w, vb.x));
+  vb.y = Math.max(BASEVB.y-my, Math.min(BASEVB.y+BASEVB.h+my-vb.h, vb.y));
+}
+function zoomAt(f, cx, cy){
+  vb.x = cx - (cx-vb.x)*f; vb.y = cy - (cy-vb.y)*f; vb.w *= f; clampVB(); setVB();
+}
+function ptOf(ev){
+  const r = map.getBoundingClientRect();
+  return {x: vb.x + (ev.clientX-r.left)/r.width*vb.w, y: vb.y + (ev.clientY-r.top)/r.height*vb.h};
+}
+map.addEventListener('wheel', e => {
+  e.preventDefault(); const p = ptOf(e);
+  zoomAt(e.deltaY > 0 ? 1.15 : 1/1.15, p.x, p.y);
+}, {passive:false});
+let drag = null, pointers = new Map(), pinch = null;
+map.addEventListener('pointerdown', e => {
+  map.setPointerCapture(e.pointerId); pointers.set(e.pointerId, e);
+  if(pointers.size === 1) drag = {sx:e.clientX, sy:e.clientY, vx:vb.x, vy:vb.y, moved:false};
+  else if(pointers.size === 2){
+    const [a,b] = [...pointers.values()];
+    pinch = {d:Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY), w:vb.w,
+             cx:(a.clientX+b.clientX)/2, cy:(a.clientY+b.clientY)/2};
+    drag = null;
+  }
+});
+map.addEventListener('pointermove', e => {
+  if(pointers.has(e.pointerId)) pointers.set(e.pointerId, e);
+  if(pinch && pointers.size === 2){
+    const [a,b] = [...pointers.values()];
+    const d = Math.hypot(a.clientX-b.clientX, a.clientY-b.clientY);
+    const r = map.getBoundingClientRect();
+    const cx = vb.x + (pinch.cx-r.left)/r.width*vb.w, cy = vb.y + (pinch.cy-r.top)/r.height*vb.h;
+    zoomAt((pinch.w * (pinch.d/Math.max(1,d)))/vb.w, cx, cy);
+    return;
+  }
+  if(!drag) return;
+  const r = map.getBoundingClientRect();
+  const dx = (e.clientX-drag.sx)/r.width*vb.w, dy = (e.clientY-drag.sy)/r.height*vb.h;
+  if(Math.abs(e.clientX-drag.sx) + Math.abs(e.clientY-drag.sy) > 4){ drag.moved = true; map.classList.add('drag'); }
+  vb.x = drag.vx - dx; vb.y = drag.vy - dy; clampVB(); setVB();
+});
+function endPointer(e){
+  pointers.delete(e.pointerId);
+  if(pointers.size < 2) pinch = null;
+  if(pointers.size === 0){ map.classList.remove('drag'); setTimeout(()=>{ drag = null; }, 0); }
+}
+map.addEventListener('pointerup', endPointer);
+map.addEventListener('pointercancel', endPointer);
+map.addEventListener('click', e => {
+  if(drag && drag.moved) return;
+  const t = e.target.closest('[data-id]');
+  if(t) select(t.dataset.id, 'map');
+});
+document.getElementById('zin').addEventListener('click', () => zoomAt(1/1.45, vb.x+vb.w/2, vb.y+vb.h/2));
+document.getElementById('zout').addEventListener('click', () => zoomAt(1.45, vb.x+vb.w/2, vb.y+vb.h/2));
+document.getElementById('fitAll').addEventListener('click', () => { vb = Object.assign({}, BASEVB); setVB(); });
+
+function fitTo(id){
+  const ids = [id].concat((function all(i){ let r=[]; (KIDS[i]||[]).forEach(k=>{ r.push(k); r=r.concat(all(k)); }); return r; })(id));
+  let x0=Infinity,x1=-Infinity,y0=Infinity,y1=-Infinity,n=0;
+  ids.forEach(i => {
+    const w = BY[i]; const pts = LINES[i] || (w.source ? [w.source, w.mouth||w.source] : null);
+    if(!pts) return;
+    pts.forEach(p => { const X=px(p[1]), Y=py(p[0]);
+      x0=Math.min(x0,X); x1=Math.max(x1,X); y0=Math.min(y0,Y); y1=Math.max(y1,Y); n++; });
+  });
+  if(!n) return;
+  const pad = Math.max(x1-x0, y1-y0)*0.18 + 30;
+  x0-=pad; x1+=pad; y0-=pad; y1+=pad;
+  const ar = BASEVB.w/BASEVB.h;
+  let w = x1-x0, h = y1-y0;
+  if(w/h < ar) w = h*ar; else h = w/ar;
+  vb = {x:(x0+x1)/2 - w/2, y:(y0+y1)/2 - h/2, w:w, h:h};
+  clampVB(); setVB();
+}
+
+/* ------------------------------------------------- selection */
+function applyHighlight(){
+  const ch = selected ? new Set(chain(selected)) : null;
+  const desc = selected ? new Set((function all(i){ let r=[i]; (KIDS[i]||[]).forEach(k=>{ r=r.concat(all(k)); }); return r; })(selected)) : null;
+  document.querySelectorAll('.riv').forEach(p => {
+    const id = p.dataset.id;
+    if(!ch){ p.classList.remove('dim'); p.style.stroke=''; p.style.strokeWidth=''; return; }
+    const inChain = ch.has(id), inDesc = desc.has(id);
+    p.classList.toggle('dim', !inChain && !inDesc);
+    if(id === selected){
+      p.style.stroke = 'var(--sel)';
+      p.style.strokeWidth = (parseFloat(p.getAttribute('stroke-width'))+1.6).toFixed(2);
+    } else if(inChain){
+      p.style.stroke = '';
+      p.style.strokeWidth = (parseFloat(p.getAttribute('stroke-width'))+0.8).toFixed(2);
+    } else { p.style.stroke = ''; p.style.strokeWidth = ''; }
+  });
+  labelDefs.forEach(d => { d.el.style.opacity = (!ch || (d.id && (ch.has(d.id) || desc.has(d.id))) || !d.id) ? '' : '.3'; });
+  placeLabels();
+}
+
+const detail = document.getElementById('detail');
+function select(id, from){
+  selected = id;
+  const w = BY[id];
+  const ch = chain(id);
+  document.getElementById('dpath').innerHTML = ch.slice(0,-1).map(c =>
+    `<button data-goto="${c}">${BY[c].name}</button>`).join(' <span>◂</span> ') || '—';
+  document.getElementById('dname').textContent = w.name;
+  const ord = DEPTH[id];
+  document.getElementById('dsub').textContent =
+    TYPE_LABEL[w.type] + (w.type === 'sea' ? '' : ' · Ordnung ' + ord) +
+    (w.states && w.states.length ? ' · ' + w.states.map(s => STATE_NAME[s]||s).join(', ') : '');
+  const rows = [];
+  if(w.length_km) rows.push(['Länge', w.length_km.toLocaleString('de-DE') + ' km']);
+  if(w.length_de_km && w.length_de_km !== w.length_km) rows.push(['davon in Deutschland', w.length_de_km.toLocaleString('de-DE') + ' km']);
+  if(w.area_km2) rows.push(['Fläche', w.area_km2.toLocaleString('de-DE') + ' km²']);
+  if(w.mouth_place) rows.push([w.type === 'lake' ? 'Abfluss bei' : w.type === 'canal' ? 'Endpunkt' : 'Mündung bei', w.mouth_place]);
+  if(w.side) rows.push(['Ufer', w.side === 'L' ? 'links' : 'rechts']);
+  if((KIDS[id]||[]).length) rows.push(['Zuflüsse im Baum', (KIDS[id]||[]).length + ' direkt, ' + DESC[id] + ' gesamt']);
+  document.getElementById('dtab').innerHTML = rows.map(r =>
+    `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('');
+  document.getElementById('dnote').textContent = w.note || '';
+  detail.classList.add('on');
+  renderTree(); applyHighlight();
+  if(from === 'map') scrollTreeTo(id);
+  if(from === 'tree') fitTo(id);
+}
+function scrollTreeTo(id){
+  chain(id).slice(0,-1).forEach(c => open.add(c));
+  renderTree();
+  const r = treeEl.querySelector(`.row[data-id="${id}"]`);
+  if(r) boxEl.scrollTop = r.offsetTop - boxEl.clientHeight/2;
+}
+document.getElementById('dpath').addEventListener('click', e => {
+  const b = e.target.closest('[data-goto]'); if(b) select(b.dataset.goto, 'map');
+});
+document.getElementById('dclose').addEventListener('click', () => {
+  detail.classList.remove('on'); selected = null; renderTree(); applyHighlight();
+});
+document.getElementById('dtree').addEventListener('click', () => {
+  scrollTreeTo(selected);
+  document.getElementById('stammbaum').scrollIntoView({behavior:'smooth', block:'start'});
+});
+document.getElementById('dmap').addEventListener('click', () => {
+  fitTo(selected);
+  document.getElementById('karte').scrollIntoView({behavior:'smooth', block:'start'});
+});
+document.addEventListener('keydown', e => { if(e.key === 'Escape') document.getElementById('dclose').click(); });
+
+/* ------------------------------------------------- go */
+renderTree();
+drawCities();
+drawLines();
+setVB();
+window.addEventListener('resize', () => { setVB(); });
+requestAnimationFrame(() => setVB());
+})();
+</script>

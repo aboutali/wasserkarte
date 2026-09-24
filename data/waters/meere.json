@@ -1,0 +1,5 @@
+{"waters": [
+{"id": "nordsee", "name": "Nordsee", "type": "sea", "parent": null, "side": null, "length_km": null, "source": null, "mouth": [54.5, 5.5], "mouth_place": "Atlantik", "states": [], "note": "Randmeer des Atlantiks; Hauptvorfluter West- und Norddeutschlands"},
+{"id": "ostsee", "name": "Ostsee", "type": "sea", "parent": null, "side": null, "length_km": null, "source": null, "mouth": [55.8, 12.7], "mouth_place": "Kattegat", "states": [], "note": "Brackwasser-Binnenmeer; Vorfluter Nordostdeutschlands"},
+{"id": "schwarzes_meer", "name": "Schwarzes Meer", "type": "sea", "parent": null, "side": null, "length_km": null, "source": null, "mouth": [45.2, 29.7], "mouth_place": "Donaudelta", "states": [], "note": "Ziel der Donau; einziges Einzugsgebiet Deutschlands nach Südosten"}
+]}

@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Gewässerstammbaum — water records",
+  "description": "One file in data/waters/. Structural rules that span files (parents exist, no cycles, every chain ends in a sea, record sits in the right file) are enforced by scripts/validate.py.",
+  "type": "object",
+  "required": ["waters"],
+  "additionalProperties": false,
+  "properties": {
+    "waters": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/water" }
+    }
+  },
+  "$defs": {
+    "latlon": {
+      "description": "[latitude, longitude] in decimal degrees (WGS84). Note the order: lat first.",
+      "type": "array",
+      "prefixItems": [
+        { "type": "number", "minimum": 40, "maximum": 60 },
+        { "type": "number", "minimum": -5, "maximum": 35 }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "water": {
+      "type": "object",
+      "required": ["id", "name", "type", "parent", "side", "length_km", "source", "mouth", "mouth_place", "states", "note"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "description": "Unique slug, a-z 0-9 _ only, umlauts transcribed (fraenkische_saale). Homonyms get a suffix naming the parent (wuerm_amper, wuerm_nagold).",
+          "type": "string", "pattern": "^[a-z0-9_]+$"
+        },
+        "name": { "description": "German name with umlauts; 'ss' instead of 'ß' (project convention).", "type": "string", "minLength": 1 },
+        "type": { "enum": ["river", "lake", "canal", "coastal", "sea"] },
+        "parent": {
+          "description": "id of the receiving water (Vorfluter). null only for seas. Lakes: the water they drain into. Canals: the water their end point merges into.",
+          "type": ["string", "null"]
+        },
+        "side": {
+          "description": "Bank of the parent on which the mouth lies, looking downstream along the parent. null for lakes, seas, coastal waters and source-river pairs.",
+          "enum": ["L", "R", null]
+        },
+        "length_km": { "description": "Total length in km; null for lakes, coastal waters, seas and where no source documents it.", "type": ["number", "null"], "minimum": 0 },
+        "length_de_km": { "description": "Length of the German section, if different.", "type": "number", "minimum": 0 },
+        "area_km2": { "description": "Surface area for lakes and coastal waters.", "type": "number", "minimum": 0 },
+        "source": { "description": "Source (rivers), lake centre (lakes), start point (canals), inner point (coastal waters). null for seas.", "oneOf": [{ "$ref": "#/$defs/latlon" }, { "type": "null" }] },
+        "mouth": { "description": "Mouth (rivers), outflow (lakes), end point (canals), opening to the sea (coastal waters). Must lie on the parent's course.", "$ref": "#/$defs/latlon" },
+        "mouth_place": { "description": "Place of the mouth, e.g. 'Koblenz, Deutsches Eck'.", "type": "string" },
+        "states": {
+          "description": "German states as ISO 3166-2:DE suffix (BE = Berlin) and foreign countries as ISO 3166-1 alpha-3 (BEL = Belgium).",
+          "type": "array",
+          "items": { "enum": ["BW", "BY", "BE", "BB", "HB", "HH", "HE", "MV", "NI", "NW", "RP", "SL", "SN", "ST", "SH", "TH", "AUT", "CHE", "FRA", "LUX", "NLD", "BEL", "CZE", "POL", "DNK"] },
+          "uniqueItems": true
+        },
+        "historic": { "description": "true for waterways no longer in operation (Ludwigskanal, Eiderkanal).", "const": true },
+        "note": { "description": "One concise fact, ideally ≤ 95 characters.", "type": "string", "maxLength": 160 }
+      }
+    }
+  }
+}

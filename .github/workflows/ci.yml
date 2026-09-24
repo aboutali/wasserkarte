@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate data
+        run: make check
+
+      - name: Committed geometry is up to date
+        run: |
+          make geometry
+          git diff --exit-code data/generated/geometry.json || {
+            echo "::error::data/generated/geometry.json is stale — run 'make geometry' and commit it"; exit 1; }
+
+      - name: Build site and CSV
+        run: make site csv
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install Playwright
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+
+      - name: Smoke test
+        run: make smoke
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: dist/

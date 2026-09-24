@@ -1,0 +1,73 @@
+{
+ "_doc": "Forced waypoints for tracing along the GSHHG network, leg by leg. Needed where a plain source->mouth search takes the wrong branch (the Rhein would otherwise follow the Aare, the larger headwater) or where the mouth lies far outside the map (Donau ends at Jochenstein).",
+ "via": {
+  "rhein": [
+   [
+    47.6597,
+    9.1747
+   ],
+   [
+    47.5596,
+    7.5886
+   ],
+   [
+    49.0069,
+    8.3
+   ],
+   [
+    50.363,
+    7.605
+   ],
+   [
+    51.436,
+    6.75
+   ],
+   [
+    51.83,
+    6.09
+   ],
+   [
+    51.98,
+    4.12
+   ]
+  ],
+  "donau": [
+   [
+    47.95,
+    8.52
+   ],
+   [
+    48.01,
+    9.21
+   ],
+   [
+    48.399,
+    9.99
+   ],
+   [
+    48.718,
+    10.78
+   ],
+   [
+    48.838,
+    11.73
+   ],
+   [
+    49.02,
+    12.1
+   ],
+   [
+    48.88,
+    12.58
+   ],
+   [
+    48.57,
+    13.46
+   ],
+   [
+    48.52,
+    13.72
+   ]
+  ]
+ }
+}

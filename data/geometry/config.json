@@ -1,0 +1,142 @@
+{
+ "_doc": "Parameters for build_geometry.py and trace_rivers.py. See docs/PIPELINE.md.",
+ "ne_aliases": {
+  "rhein": [
+   "Rhine",
+   "Nederrijn"
+  ],
+  "donau": [
+   "Donau",
+   "Danube"
+  ],
+  "elbe": [
+   "Elbe"
+  ],
+  "weser": [
+   "Weser"
+  ],
+  "ems": [
+   "Ems"
+  ],
+  "oder": [
+   "Oder"
+  ],
+  "main": [
+   "Main"
+  ],
+  "mosel": [
+   "Mosel"
+  ],
+  "neckar": [
+   "Neckar"
+  ],
+  "inn": [
+   "Inn"
+  ],
+  "isar": [
+   "Isar"
+  ],
+  "saale": [
+   "Saale"
+  ],
+  "spree": [
+   "Spree"
+  ],
+  "fulda": [
+   "Fulda"
+  ],
+  "ruhr": [
+   "Ruhr"
+  ],
+  "lippe": [
+   "Lippe"
+  ],
+  "saar": [
+   "Saar"
+  ],
+  "lausitzer_neisse": [
+   "Lausitzer Neiße"
+  ],
+  "unstrut": [
+   "Unstrut"
+  ],
+  "weisse_elster": [
+   "Weiße Elster"
+  ],
+  "zwickauer_mulde": [
+   "Zwickauer Mulde"
+  ],
+  "regnitz": [
+   "Regnitz"
+  ],
+  "salzach": [
+   "Salzach"
+  ],
+  "waldnaab": [
+   "Waldnaab"
+  ],
+  "schwarze_elster": [
+   "Schwarze Elster"
+  ],
+  "vechte": [
+   "Vechte"
+  ],
+  "ohm": [
+   "Ohm"
+  ],
+  "glan": [
+   "Glan"
+  ],
+  "maas": [
+   "Maas"
+  ],
+  "aare": [
+   "Aare"
+  ],
+  "ill_elsass": [
+   "Ill"
+  ],
+  "warthe": [
+   "Warta"
+  ],
+  "bober": [
+   "Bober"
+  ],
+  "moldau": [
+   "Vltava"
+  ],
+  "eger": [
+   "Eger"
+  ]
+ },
+ "ne_clip_end": {
+  "donau": [
+   48.58,
+   13.46
+  ]
+ },
+ "draw_end": {
+  "donau": [
+   48.52,
+   13.72
+  ]
+ },
+ "snap_km": {
+  "default": 16,
+  "canal": 10
+ },
+ "draw_bbox": {
+  "lat": [
+   46.2,
+   55.8
+  ],
+  "lon": [
+   4.3,
+   16.4
+  ]
+ },
+ "trace_full_course_exempt": [
+  "rhein",
+  "elbe"
+ ]
+}
