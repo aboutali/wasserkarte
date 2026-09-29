@@ -124,7 +124,7 @@ def main() -> int:
                 continue
             L = w.get("length_km")
             clipped = not (inside(w["source"]) and inside(w["mouth"]))
-            if L and not clipped and src.get(w["id"]) in ("gshhs", "kanal"):
+            if L and not clipped and src.get(w["id"]) in ("hydro", "gshhs", "kanal"):
                 r = polyline_km(lines[w["id"]]) / L
                 lo, hi = (0.75, 1.25) if src[w["id"]] == "kanal" else (0.3, 1.6)
                 if not lo <= r <= hi and w["id"] not in ("donau", "rhein", "elbe", "oder"):

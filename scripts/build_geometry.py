@@ -4,6 +4,8 @@
 Priority per water (first match wins), recorded in geometry.json["src"]:
 
   kanal   documented canal route           data/geometry/canal_routes.json
+  hydro   HydroRIVERS course (HydroSHEDS)  data/generated/hydro.json
+          (elbe: estuary tail from manual_courses)
   gshhs   traced GSHHG course              data/generated/traced.json
           (rhein: Alpenrhein head from manual_courses; elbe: estuary tail)
   ne      Natural Earth line (+ manual)    data/generated/ne_rivers.json + manual_courses.json
@@ -15,8 +17,8 @@ Afterwards every mouth is snapped onto the drawn course of its parent (so the
 map is topologically identical to the tree), and points outside the drawing
 box are clipped.
 
-Stdlib only — runs without the heavy geo stack once traced.json and
-ne_rivers.json exist (both are committed).
+Stdlib only — runs without the heavy geo stack once hydro.json, traced.json
+and ne_rivers.json exist (all committed).
 """
 from __future__ import annotations
 
@@ -132,6 +134,7 @@ def main() -> None:
     manual_cfg = read_json(GEOMETRY_DIR / "manual_courses.json")
     manual, prepend = manual_cfg["courses"], set(manual_cfg["prepend"])
     canals = read_json(GEOMETRY_DIR / "canal_routes.json")["routes"]
+    hydro = read_json(GENERATED / "hydro.json")
     traced = read_json(GENERATED / "traced.json")
     ne = read_json(GENERATED / "ne_rivers.json")
     aliases, ne_clip_end, draw_end = cfg["ne_aliases"], cfg["ne_clip_end"], cfg["draw_end"]
@@ -148,6 +151,15 @@ def main() -> None:
 
         if w["type"] == "canal" and wid in canals:
             geo[wid], src_of[wid] = [list(p) for p in canals[wid]], "kanal"
+            continue
+
+        if wid in hydro:
+            line = [list(p) for p in hydro[wid]["line"]]
+            if wid == "elbe":                        # estuary tail to Cuxhaven
+                tail = manual["elbe"]
+                k = min(range(len(line)), key=lambda i: kmd(line[i], tail[0]))
+                line = line[:k] + [list(p) for p in tail]
+            geo[wid], src_of[wid] = line, "hydro"
             continue
 
         if wid in traced:

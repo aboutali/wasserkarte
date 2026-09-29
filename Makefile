@@ -2,12 +2,12 @@
 #
 # Tier 1 (Python stdlib only):  check fix site csv geometry
 # Tier 2 (node + Playwright):   smoke poster screenshots
-# Tier 3 (heavy geo stack):     sources base trace geo  — needs requirements-geo.txt
+# Tier 3 (heavy geo stack):     sources base trace hydro geo  — needs requirements-geo.txt
 
 PY ?= python3
 NODE ?= node
 
-.PHONY: help all check fix site csv geometry smoke poster screenshots fonts sources base trace geo serve clean
+.PHONY: help all check fix site csv geometry smoke poster screenshots fonts sources base trace hydro geo serve clean
 
 help:            ## list targets
 	@grep -E '^[a-z]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  make %-12s %s\n", $$1, $$2}'
@@ -50,7 +50,10 @@ base: sources    ## data/generated/{base,states,ne_rivers}.json from raw/
 trace: sources   ## data/generated/traced.json from the GSHHG network
 	$(PY) scripts/trace_rivers.py
 
-geo: base trace geometry  ## full geometry rebuild from raw sources
+hydro: sources   ## data/generated/hydro.json from HydroRIVERS (HydroSHEDS)
+	$(PY) scripts/trace_hydrosheds.py
+
+geo: base trace hydro geometry  ## full geometry rebuild from raw sources
 
 serve: site      ## http://localhost:8000
 	$(PY) -m http.server -d dist 8000

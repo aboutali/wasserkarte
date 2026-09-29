@@ -364,8 +364,9 @@ footer p{margin:0 0 12px}
 
 <section id="karte">
   <div class="shead"><h2>Die Karte</h2><span class="snum">Teil II</span></div>
-  <p class="sintro">Dieselbe Ordnung, geografisch verortet. {{n_surveyed}} Flussläufe sind aus vermessenen
-  Gewässerlinien übernommen und zeigen den echten Verlauf mit allen Schlingen; {{n_schematic}} meist kurze
+  <p class="sintro">Dieselbe Ordnung, geografisch verortet. {{n_surveyed}} Flussläufe folgen einem aus
+  einem Höhenmodell abgeleiteten Gewässernetz (HydroSHEDS) und zeigen den echten Verlauf, nur die
+  kleinsten Schlingen sind geglättet; {{n_schematic}} meist kurze
   Zuflüsse sind zwischen belegter Quelle und belegter Mündung schematisch geführt und heller
   gezeichnet. Die Kanäle folgen belegten Wegpunkten — Schleusen, Kanalkreuzen, durchfahrenen
   Städten — und sind deshalb eckig statt geschwungen. Staatsgrenzen, Bundesländer, Seen und
@@ -406,7 +407,7 @@ footer p{margin:0 0 12px}
     <div class="lg">
       <h4>Verlauf</h4>
       <ul>
-        <li><svg width="26" height="10"><path d="M0 7c4-4 6 2 10-1s6 2 16-3" fill="none" stroke="var(--nordsee)" stroke-width="2.2"/></svg>vermessener Lauf ({{n_surveyed}})</li>
+        <li><svg width="26" height="10"><path d="M0 7c4-4 6 2 10-1s6 2 16-3" fill="none" stroke="var(--nordsee)" stroke-width="2.2"/></svg>Lauf aus Gewässernetz ({{n_surveyed}})</li>
         <li><svg width="26" height="10"><path d="M0 7c8-5 18-1 26-4" fill="none" stroke="var(--nordsee)" stroke-width="1.4" opacity=".45"/></svg>schematisch geführt ({{n_schematic}})</li>
         <li><svg width="26" height="10"><path d="M1 8 9 4l6 1 10-5" fill="none" stroke="var(--ink-2)" stroke-width="1.8" stroke-dasharray="5 3"/></svg>Kanal, nach Wegpunkten ({{n_canal_routes}})</li>
         <li><svg width="26" height="10"><path d="M1 8 9 4l6 1 10-5" fill="none" stroke="var(--ink-2)" stroke-width="1.5" stroke-dasharray="1.5 3" opacity=".6"/></svg>Kanal, historisch</li>
@@ -437,13 +438,17 @@ footer p{margin:0 0 12px}
   {{n_sea}} Meere. Aufgenommen sind Gewässer mit Deutschlandbezug — auch ausländische Ober- und Unterläufe
   deutscher Flüsse, damit die Abstammungslinie bis zum Meer geschlossen bleibt. Längen, Mündungsorte
   und Mündungsufer stammen aus der deutschsprachigen Wikipedia.</p>
-  <p>Die Karte: {{n_surveyed}} Flussläufe stammen aus vermessenen Gewässerlinien (GSHHG/WDBII in voller
-  Auflösung) und wurden über Quell- und Mündungskoordinate dem jeweiligen Gewässer zugeordnet — sie
-  zeigen den echten Verlauf. Die übrigen {{n_schematic}}, meist unter 100 km lang, sind zwischen belegter Quelle
+  <p>Die Karte: {{n_surveyed}} Flussläufe stammen aus HydroSHEDS (HydroRIVERS, 15 Bogensekunden), einem aus einem
+  Höhenmodell abgeleiteten Gewässernetz ohne Namen. Sie wurden über Quell- und Mündungskoordinate dem
+  jeweiligen Gewässer zugeordnet und folgen dem echten Verlauf; das Netz glättet allerdings die
+  kleinsten Windungen. Für wenige Flüsse, die sich darin nicht finden liessen, dient als Rückfall
+  vermessene Küsten- und Gewässerlinie (GSHHG/WDBII, Natural Earth). Die übrigen {{n_schematic}}, meist unter 100 km lang, sind zwischen belegter Quelle
   und belegter Mündung schematisch geführt und deshalb heller und dünner gezeichnet; ihre Krümmung
   folgt der Sinuosität, also dem Verhältnis von Flusslänge zu Luftlinie. Mündungspunkte sind auf den
   Lauf des Vorfluters gerastert, damit die Karte topologisch mit dem Stammbaum übereinstimmt.
-  Küstenlinie, Staatsgrenzen, Bundesländer, Seeflächen und Städte stammen aus Natural Earth (10 m).</p>
+  Küstenlinie, Staatsgrenzen, Bundesländer, Seeflächen und Städte stammen aus Natural Earth (10 m).
+  Flussgeometrie: Lehner, B., Grill G. (2013), Hydrological Processes 27(15), 2171–2186; Daten von
+  hydrosheds.org.</p>
   <p>Die Kanäle sind einzeln gegen die Wikipedia geprüft: Länge, Anfangs- und Endpunkt, das
   Gewässer, in das sie übergehen, und ihr Betriebszustand. Ihre Linienführung folgt belegten
   Zwischenpunkten, nicht einer Interpolation. Dabei korrigiert: der Mittellandkanal geht bei
