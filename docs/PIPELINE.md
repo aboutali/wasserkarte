@@ -48,18 +48,22 @@ course is found by walking the network downstream:
 
 1. **Candidates.** Reaches with a vertex near the documented source: radius max(3, min(10, 0.08 L)) km,
    widened ×2.5 and then ×4 if nothing fits.
-2. **Walk.** From each candidate follow `NEXT_DOWN`. Parents are traced before their tributaries; the walk
-   ends when it enters a reach already assigned to the parent (the confluence). For rivers whose parent is
-   not traced (sea, lake, coastal water) it is cut at the vertex nearest the documented mouth (or
-   `draw_end`).
+2. **Walk.** From each candidate follow `NEXT_DOWN`. If the walk passes closer to the documented source
+   than its start, it starts there. Parents are traced before their tributaries. The walk ends where it
+   enters the parent's course (the confluence), if that lies near the documented mouth; otherwise at the
+   vertex nearest the documented mouth (or `draw_end`). A candidate is dropped when it joins the parent
+   elsewhere before reaching the mouth (a neighbouring stream), or when it runs more than max(2, 0.1 L) km
+   through reaches another river already claimed (two siblings would share one line).
 3. **Score** (lowest wins): `|walked − 0.89·L| + 2·mouth distance + source distance + 3·Σ tributary distances`.
    The last term sums how far the mouths of the river's own tributaries lie from the walked course (capped
    at 8 km each), which separates a river from a neighbour with a similar length. The factor 0.89 is the
    median walked/documented length ratio: 15" lines cut the smallest meanders.
 4. **Rejections.** Mouth more than max(5, min(15, 0.15 L)) km off the walk's end, except when the walk
-   reaches the network outlet (an estuary; a straight tail to the mouth is then added); walked/documented
-   length outside 0.6–1.45 (short courses pass when source and mouth both lie within 2.5 km); tributary
-   mouths far off the course.
+   reaches the network outlet (an estuary; a straight tail to the mouth is then added); source more than
+   min(15, max(3, 0.3 L)) km off the course; walked/documented length outside 0.6–1.45 (short courses pass
+   when source and mouth both lie within 2.5 km); tributary mouths far off the course. The documented
+   source is joined to the course only within 1.5 km; further off, the course starts where the network
+   starts (HydroRIVERS begins at 10 km² catchment), since a straight stub would look wrong.
 5. **Simplification.** Ramer–Douglas–Peucker at 0.12 km.
 
 Because the walk starts at the documented source, a wrong source coordinate yields a wrong or missing

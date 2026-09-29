@@ -135,24 +135,25 @@ def rdp(pts, eps_km):
     return [p for p, k in zip(pts, keep) if k]
 
 
-def trace(net, w, mouth, tribs, free_length, parent_reaches):
+def trace(net, w, mouth, tribs, free_length, parent_reaches, claimed):
     """Best downstream walk for w, or a string with the reason for rejection.
 
     tribs: mouths of w's own tributaries — the course should pass them all.
     free_length: the course is drawn to a point short of the real mouth (draw_end),
     so the length only has an upper bound.
     parent_reaches: HydroRIVERS reaches of the parent's course, if the parent is traced.
+    claimed: reaches already assigned to other rivers; a course must not run through them.
     """
     L = w["length_km"]
     for radius in (r_src(L), 2.5 * r_src(L), 4 * r_src(L)):
-        r = best_walk(net, w, mouth, tribs, free_length, parent_reaches, radius)
+        r = best_walk(net, w, mouth, tribs, free_length, parent_reaches, claimed, radius)
         if isinstance(r, dict):
             r["radius"] = radius
             return r
     return r
 
 
-def best_walk(net, w, mouth, tribs, free_length, parent_reaches, radius):
+def best_walk(net, w, mouth, tribs, free_length, parent_reaches, claimed, radius):
     L, S = w["length_km"], w["source"]
     best, seen = None, set()
     for ds, rid, k in net.near(S, radius):
@@ -165,8 +166,11 @@ def best_walk(net, w, mouth, tribs, free_length, parent_reaches, radius):
         j = next((i for i, st in enumerate(steps) if st[0] in parent_reaches), None)
         if j == 0:
             continue                                  # starts on the parent itself
-        if j is not None and kmd(pts[j - 1], mouth) <= r_mouth(L):
-            cut = j - 1
+        if j is not None:
+            if kmd(pts[j - 1], mouth) <= r_mouth(L):
+                cut = j - 1
+            elif cut >= j:
+                continue                              # joins the parent elsewhere: wrong stream
         key = (steps[cut][0], steps[cut][1], steps[min(cut, 1)][0])
         if key in seen:
             continue
@@ -179,6 +183,10 @@ def best_walk(net, w, mouth, tribs, free_length, parent_reaches, radius):
         dh = kmd(pts[h], w["source"])
         if dh >= ds:
             h, dh = 0, ds
+        shared = sum(steps[i][2] - steps[i - 1][2] for i in range(h + 1, cut + 1)
+                     if steps[i][0] in claimed)
+        if shared > max(2.0, 0.1 * L):
+            continue                                  # runs down another river's course
         walked = steps[cut][2] - steps[h][2] + dh
         course = pts[h:cut + 1:3] + [pts[cut]]
         miss = sum(min(TRIB_CAP_KM, min(kmd(t, p) for p in course)) for t in tribs)
@@ -224,6 +232,8 @@ def main() -> None:
     for w in waters:
         children[w.get("parent")].append(w)
     reaches = {}                                   # id -> HydroRIVERS reaches of its course
+    all_reaches = {}                               # the same, including the first reach
+    claimed = set()                                # reaches of all traced courses
     out, report = {}, {}
     rivers = [w for w in waters if w["type"] == "river"]
     for w in sorted(rivers, key=lambda x: (level(x["id"], by_id), -(x.get("length_km") or 0))):
@@ -234,12 +244,15 @@ def main() -> None:
         mouth = draw_end.get(wid) or w["mouth"]
         tribs = [c["mouth"] for c in children[wid] if c["type"] == "river" and c.get("mouth")
                  and kmd(c["mouth"], w["source"]) > 2 and kmd(c["mouth"], mouth) > 2]
-        r = trace(net, w, mouth, tribs, wid in draw_end, reaches.get(w.get("parent"), set()))
+        r = trace(net, w, mouth, tribs, wid in draw_end, reaches.get(w.get("parent"), set()),
+                  claimed - all_reaches.get(w.get("parent"), set()))
         if isinstance(r, str):
             report[wid] = r
             continue
         # the first reach may belong to a head stream (Werra above the Weser's source)
         reaches[wid] = {st[0] for st in r["steps"] if st[0] != r["steps"][0][0]}
+        all_reaches[wid] = {st[0] for st in r["steps"]}
+        claimed |= all_reaches[wid]
         line = [list(net.pts[rid][k]) for rid, k, _ in r["steps"]]
         if 0.3 < r["ds"] <= STUB_KM:                   # further off: a straight stub looks wrong
             line = [list(w["source"])] + line
