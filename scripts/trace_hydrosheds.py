@@ -17,7 +17,8 @@ we know source, mouth and length, so the course is a downstream walk:
      is too far off or the length is implausible.
 
 Parents are traced before their tributaries, so every tributary ends exactly on
-its parent's course. Courses are simplified (Ramer–Douglas–Peucker, SIMPLIFY_KM).
+its parent's course. Courses are smoothed against the raster's stair steps and
+simplified (Ramer–Douglas–Peucker, SIMPLIFY_KM).
 
 Output: data/generated/hydro.json        (read by build_geometry.py)
         build/hydro_report.json          (per river: match or reason for rejection)
@@ -107,6 +108,18 @@ class Network:
                 prev = pts[kk]
             rid, k = self.next.get(rid), 1            # vertex 0 repeats the previous end
         return out
+
+
+def smooth(pts):
+    """Weighted moving average (1-2-3-2-1) against the 15" raster's stair steps; ends stay fixed."""
+    if len(pts) < 5:
+        return pts
+    w = (1, 2, 3, 2, 1)
+    out = [pts[0], pts[1]]
+    for i in range(2, len(pts) - 2):
+        win = pts[i - 2:i + 3]
+        out.append([sum(k * p[0] for k, p in zip(w, win)) / 9, sum(k * p[1] for k, p in zip(w, win)) / 9])
+    return out + [pts[-2], pts[-1]]
 
 
 def rdp(pts, eps_km):
@@ -258,7 +271,7 @@ def main() -> None:
             line = [list(w["source"])] + line
         if r["outlet"] and r["dm"] > 0.3:              # estuary: HydroRIVERS ends at its coastline
             line.append(list(mouth))
-        line = [[round(p[0], 4), round(p[1], 4)] for p in rdp(line, SIMPLIFY_KM)]
+        line = [[round(p[0], 4), round(p[1], 4)] for p in rdp(smooth(line), SIMPLIFY_KM)]
         out[wid] = {"line": line, "km": round(r["km"]), "src_off": round(r["ds"], 1),
                     "mouth_off": round(r["dm"], 1), "trib_off": round(r["miss"], 1),
                     "radius": round(r["radius"], 1)}
