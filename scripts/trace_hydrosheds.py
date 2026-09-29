@@ -45,6 +45,9 @@ LEN_WINDOW = (0.6, 1.45)                              # walked length / length_k
 LEN_FACTOR = 0.89                                     # median walked length / length_km:
                                                       # 15" lines cut the smallest meanders
 TRIB_CAP_KM = 8.0                                     # cap per tributary mouth off the course
+STUB_KM = 1.5                                         # join the documented source up to this distance
+SRC_MAX_KM = 15.0                                     # reject a course starting further off
+                                                      # (short rivers: 30 % of the length)
 
 
 def r_src(L):
@@ -171,19 +174,26 @@ def best_walk(net, w, mouth, tribs, free_length, parent_reaches, radius):
         dm = kmd(pts[cut], mouth)
         if dm > 3 * r_mouth(L) and not (cut == len(pts) - 1 and not net.next.get(steps[cut][0])):
             continue
-        walked = steps[cut][2] + ds
-        course = pts[:cut + 1:3] + [pts[cut]]
+        # a walk from further upstream may pass the documented source: start there
+        h = min(range(cut + 1), key=lambda i: kmd(pts[i], w["source"]))
+        dh = kmd(pts[h], w["source"])
+        if dh >= ds:
+            h, dh = 0, ds
+        walked = steps[cut][2] - steps[h][2] + dh
+        course = pts[h:cut + 1:3] + [pts[cut]]
         miss = sum(min(TRIB_CAP_KM, min(kmd(t, p) for p in course)) for t in tribs)
         dlen = 0 if free_length and walked <= LEN_FACTOR * L else abs(walked - LEN_FACTOR * L)
-        score = dlen + 2.0 * dm + 1.0 * ds + 3.0 * miss
+        score = dlen + 2.0 * dm + 1.0 * dh + 3.0 * miss
         if best is None or score < best["score"]:
-            best = {"steps": steps[:cut + 1], "ds": ds, "dm": dm, "km": walked, "score": score,
+            best = {"steps": steps[h:cut + 1], "ds": dh, "dm": dm, "km": walked, "score": score,
                     "miss": miss, "outlet": cut == len(pts) - 1 and not net.next.get(steps[cut][0])}
     if best is None:
         return "kein_lauf"
     ratio = best["km"] / L
     if best["dm"] > r_mouth(L) and not best["outlet"]:
         return f"muendung_abseits: {best['dm']:.1f} km, {best['km']:.0f} of {L} km"
+    if best["ds"] > min(SRC_MAX_KM, max(3.0, 0.3 * L)):
+        return f"quelle_abseits: {best['ds']:.1f} km"
     if best["dm"] > 120:
         return f"muendung_abseits: {best['dm']:.1f} km from the network outlet"
     ends_hit = best["ds"] <= 2.5 and best["dm"] <= 2.5
@@ -231,7 +241,7 @@ def main() -> None:
         # the first reach may belong to a head stream (Werra above the Weser's source)
         reaches[wid] = {st[0] for st in r["steps"] if st[0] != r["steps"][0][0]}
         line = [list(net.pts[rid][k]) for rid, k, _ in r["steps"]]
-        if r["ds"] > 0.3:
+        if 0.3 < r["ds"] <= STUB_KM:                   # further off: a straight stub looks wrong
             line = [list(w["source"])] + line
         if r["outlet"] and r["dm"] > 0.3:              # estuary: HydroRIVERS ends at its coastline
             line.append(list(mouth))
