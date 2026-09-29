@@ -10,6 +10,7 @@ Sources
   * German state borders, isellsoap/deutschlandGeoJSON (medium resolution)
   * GSHHG / WDBII river network, full resolution, read through the
     `basemap-data-hires` package (needs requirements-geo.txt)
+  * HydroRIVERS v1.0, Europe (HydroSHEDS, 15 arc-seconds), ~68 MB zip
   * Spectral, Archivo and IBM Plex Mono from the google/fonts repository (OFL),
     only used to render the print poster
 """
@@ -19,6 +20,7 @@ import argparse
 import json
 import sys
 import urllib.request
+import zipfile
 
 from common import BUILD, RAW, write_json
 
@@ -41,6 +43,7 @@ FONTS = {
     "IBMPlexMono-Medium.ttf": "ibmplexmono/IBMPlexMono-Medium.ttf",
     "Archivo.ttf": "archivo/Archivo%5Bwdth,wght%5D.ttf",
 }
+HYDRORIVERS_URL = "https://data.hydrosheds.org/file/HydroRIVERS/HydroRIVERS_v10_eu_shp.zip"
 # GSHHG extraction window (lon0, lat0, lon1, lat1) — wider than the map on purpose,
 # so the Rhine delta and the Czech Elbe/Moldau are part of the network.
 GSHHS_BBOX = (2.5, 44.0, 19.5, 57.0)
@@ -90,6 +93,12 @@ def main() -> None:
         download(STATES_URL, RAW / "bundeslaender.geojson", a.force)
         print("GSHHG rivers")
         extract_gshhs(RAW / "gshhs_rivers_f.json", a.force)
+        print("HydroRIVERS")
+        zpath = RAW / "hydrosheds" / "HydroRIVERS_v10_eu_shp.zip"
+        download(HYDRORIVERS_URL, zpath, a.force)
+        if a.force or not (zpath.parent / "HydroRIVERS_v10_eu_shp" / "HydroRIVERS_v10_eu.shp").exists():
+            with zipfile.ZipFile(zpath) as z:
+                z.extractall(zpath.parent)
     print("Fonts")
     for name, path in FONTS.items():
         download(FONT_BASE + path, BUILD / "fonts" / name, a.force)

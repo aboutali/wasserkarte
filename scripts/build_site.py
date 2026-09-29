@@ -48,7 +48,7 @@ def stats(b: dict) -> dict:
         "n_canal": types["canal"], "n_sea": types["sea"],
         "n_nordsee": seas["nordsee"], "n_ostsee": seas["ostsee"],
         "n_schwarzes_meer": seas["schwarzes_meer"],
-        "n_surveyed": sum(1 for i, s in src.items() if s in ("gshhs", "ne") and by_id[i]["type"] == "river"),
+        "n_surveyed": sum(1 for i, s in src.items() if s in ("hydro", "gshhs", "ne") and by_id[i]["type"] == "river"),
         "n_schematic": sum(1 for s in src.values() if s == "schema"),
         "n_canal_routes": sum(1 for s in src.values() if s == "kanal"),
         "n_cities": len(b["base"]["cities"]),

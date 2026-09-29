@@ -8,7 +8,7 @@ from common import DIST, GENERATED, ancestors, load_waters, read_json
 
 TYPE_DE = {"river": "Fliessgewässer", "lake": "See/Talsperre", "canal": "Kanal",
            "coastal": "Küstengewässer", "sea": "Meer"}
-COURSE_DE = {"gshhs": "vermessen", "ne": "vermessen", "kanal": "Wegpunkte", "schema": "schematisch"}
+COURSE_DE = {"hydro": "vermessen", "gshhs": "vermessen", "ne": "vermessen", "kanal": "Wegpunkte", "schema": "schematisch"}
 COLUMNS = ["id", "name", "typ", "status", "vorfluter_id", "vorfluter", "ordnung",
            "einzugsgebiet_meer", "laenge_km", "laenge_in_de_km", "flaeche_km2", "ufer",
            "muendung_ort", "muendung_lat", "muendung_lon", "quelle_lat", "quelle_lon",
