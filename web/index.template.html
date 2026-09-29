@@ -705,7 +705,8 @@ function lodOk(w){
   if(LOD >= 3) return true;
   const L = w.length_km || 0;
   if(LOD === 1) return L >= 180 || DEPTH[w.id] <= 1 || w.type === 'lake' && (w.area_km2||0) >= 60;
-  return SRC[w.id] !== 'schema' || L >= 60 || (w.type === 'lake' && (w.area_km2||0) >= 12);
+  const minL = map.clientWidth < 600 ? 100 : 70;       /* phones: fewer rivers at "mittel" */
+  return L >= minL || DEPTH[w.id] <= 1 || (w.type === 'lake' && (w.area_km2||0) >= 12);
 }
 function mapVisible(w){
   if(!seaOn[w.sea]) return false;
