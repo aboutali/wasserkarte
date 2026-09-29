@@ -121,8 +121,8 @@ within ~75–125 % of `length_km` (the validator warns otherwise).
 
 ## Known issues / backlog
 
-- 11 of 413 rivers are still schematic: HydroRIVERS could not be matched to them (the rivers are listed in
-  `build/hydro_report.json`). HydroRIVERS is a 15" network that smooths the smallest meanders; a finer
+- 27 of 413 rivers do not follow HydroRIVERS (17 schematic, the rest GSHHG or Natural Earth); the reasons are listed in
+  `build/hydro_report.json`. HydroRIVERS is a 15" network that smooths the smallest meanders; a finer
   source (OSM waterways, EU-Hydro, BKG DLM250) would allow more accurate courses.
 - `make check` warnings worth resolving: missing lengths (Kleine Vils, Sagter Ems, Broklandsau,
   Husumer Au, Wörpe, Bongsieler Kanal), `boize`/`oder_havel_kanal`/`pader`/`ihme` source–mouth distance exceeds

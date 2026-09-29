@@ -12,7 +12,7 @@ as an interactive page and an A0 poster.
 
 - **Tree** — indented by order (1 = drains into the sea), siblings sorted by where they enter the
   parent from source to mouth, searchable, filterable by sea.
-- **Map** — nearly all rivers (about 400) follow the HydroSHEDS/HydroRIVERS river network; the few
+- **Map** — about 390 of 413 rivers follow the HydroSHEDS/HydroRIVERS river network; the few
   it cannot match come from GSHHG/Natural Earth or are drawn schematically and visibly lighter. Canals
   follow documented waypoints; borders, lakes and cities give orientation. Tap a water to highlight its path to the sea.
 - **Data** — one JSON record per water with length, mouth, bank, states and a one-line fact,
