@@ -19,16 +19,18 @@ make fix          # rewrite data/waters canonically (moves records to the right 
 make site         # dist/index.html, dist/gewaesser.json, build/poster.html
 make geometry     # recompute drawn courses (stdlib only) — run after changing coordinates,
                   #   parents, canal routes or manual courses; commit data/generated/geometry.json
+make hydro        # data/generated/hydro.json from HydroRIVERS (needs pyshp; ~68 MB download on first run)
 make smoke        # headless-browser test of dist/index.html (needs `npm ci`)
 make poster       # dist/gewaesserstammbaum-a0.pdf (downloads fonts on first run)
 make screenshots  # docs/img/*.png
 make serve        # http://localhost:8000
-make geo          # FULL rebuild from raw sources: needs `pip install -r requirements-geo.txt`
+make geo          # FULL rebuild (base trace hydro geometry): needs `pip install -r requirements-geo.txt`
 ```
 
 Tier 1 (`check fix site csv geometry`) needs only the Python ≥ 3.10 standard library (output is identical on 3.10–3.13). Tier 2 (`smoke poster
 screenshots`) needs Node ≥ 18 and `npm ci && npx playwright install chromium`. Tier 3
-(`sources base trace geo`) needs the heavy geo stack and network access to raw.githubusercontent.com.
+(`sources base trace hydro geo`) needs the heavy geo stack and network access to raw.githubusercontent.com
+and data.hydrosheds.org.
 
 ## Layout
 
@@ -70,17 +72,22 @@ Don't place records by hand — add them anywhere and run `make fix`.
 `scripts/build_geometry.py`, first match wins, recorded as `geometry.json["src"]`:
 
 1. `kanal` — `data/geometry/canal_routes.json` (documented waypoints, drawn as straight segments)
-2. `gshhs` — `data/generated/traced.json`, courses matched in the GSHHG/WDBII network by
-   `trace_rivers.py` (Rhein gets its Alpenrhein head, Elbe its estuary from `manual_courses.json`)
-3. `ne` — Natural Earth line (`ne_rivers.json` via `config.json:ne_aliases`) and/or a manual course
-4. `schema` — source → own tributaries' mouths → mouth; 2-point courses become an S-curve scaled by
+2. `hydro` — `data/generated/hydro.json`, courses matched in the HydroRIVERS network (HydroSHEDS,
+   15 arc-second) by `trace_hydrosheds.py`: a downstream walk from the documented source, cut at the
+   documented mouth (Elbe gets its estuary tail from `manual_courses.json`)
+3. `gshhs` — `data/generated/traced.json`, fallback for rivers HydroRIVERS cannot match: courses matched in
+   the GSHHG/WDBII network by `trace_rivers.py` (Rhein gets its Alpenrhein head from `manual_courses.json`)
+4. `ne` — Natural Earth line (`ne_rivers.json` via `config.json:ne_aliases`) and/or a manual course
+5. `schema` — source → own tributaries' mouths → mouth; 2-point courses become an S-curve scaled by
    sinuosity. Drawn lighter/thinner on purpose — the map must not pretend to be more accurate than it is.
 
 Then mouths are snapped onto the parent's drawn course and everything is clipped to the drawing box.
 `make geometry` is deterministic; CI fails if the committed `geometry.json` is stale.
 
-To **fix a wrong course**: prefer adding forced waypoints to `data/geometry/via_points.json` and
-re-running `make trace` (tier 3); otherwise add a hand-drawn chain to `manual_courses.json`
+To **fix a wrong course**: for a `hydro` course first check the documented source and mouth coordinates
+against de.wikipedia — the walk starts at the source, so a wrong coordinate picks the wrong reach;
+`build/hydro_report.json` explains every match and rejection (then `make hydro geometry`). For a `gshhs`
+course prefer adding forced waypoints to `data/geometry/via_points.json` and re-running `make trace` (tier 3); otherwise add a hand-drawn chain to `manual_courses.json`
 (used only when the river is not traced). Canals: edit `canal_routes.json`, keep the drawn length
 within ~75–125 % of `length_km` (the validator warns otherwise).
 
@@ -106,13 +113,17 @@ within ~75–125 % of `length_km` (the validator warns otherwise).
 - Natural Earth "Spree" includes the lower Havel, "Weser" includes the Werra — clipping at the
   documented source/mouth handles it; keep that in mind when adding aliases.
 - GSHHG has no Alpenrhein↔Hochrhein connection through the Bodensee and prefers the Aare as the
-  Rhine's headwater; that is why the Rhein is traced via `via_points.json`.
+  Rhine's headwater; that is why the Rhein is traced via `via_points.json` (only relevant while the Rhein
+  is a `gshhs` course).
+- HydroRIVERS has no names and its vertices run downstream; `trace_hydrosheds.py` traces parents before
+  tributaries, so a tributary ends exactly on its parent's course. Citation and licence: DATA_SOURCES.md.
 - Seas keep the order of `data/waters/meere.json` in the tree (Nordsee, Ostsee, Schwarzes Meer).
 
 ## Known issues / backlog
 
-- 300 of 413 rivers are schematic: GSHHG only contains the larger rivers. A better source
-  (OSM waterways, EU-Hydro, BKG DLM250) would allow real courses for all of them.
+- 11 of 413 rivers are still schematic: HydroRIVERS could not be matched to them (the rivers are listed in
+  `build/hydro_report.json`). HydroRIVERS is a 15" network that smooths the smallest meanders; a finer
+  source (OSM waterways, EU-Hydro, BKG DLM250) would allow more accurate courses.
 - `make check` warnings worth resolving: missing lengths (Kleine Vils, Sagter Ems, Broklandsau,
   Husumer Au, Wörpe, Bongsieler Kanal), `boize`/`oder_havel_kanal`/`pader`/`ihme` source–mouth distance exceeds
   length (coordinates or length wrong), `maas` has a `side` although it drains into the sea.

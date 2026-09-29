@@ -5,7 +5,8 @@
  Natural Earth  ─┐   │                                                                            │
  deutschland-    ├─► fetch_sources.py ─► raw/ ─┬─► prepare_base.py ─► data/generated/base.json     │
    GeoJSON       │   (+ GSHHG via basemap)     │                      data/generated/states.json   │
- GSHHG/WDBII   ──┘                             │                      data/generated/ne_rivers.json│
+ HydroRIVERS   ──┤                             │                      data/generated/ne_rivers.json│
+ GSHHG/WDBII   ──┘                             ├─► trace_hydrosheds.py ─► data/generated/hydro.json│
                      │                         └─► trace_rivers.py ─► data/generated/traced.json   │
                      └────────────────────────────────────────────────────────────────────────────┘
                      ┌──────────────────── tier 1: Python stdlib ────────────────────────────────┐
@@ -29,16 +30,46 @@ Running tier 3 on the committed inputs reproduces the committed outputs byte for
 |---|---|---|---|
 | `fetch_sources.py` | internet | `raw/`, `build/fonts/` | basemap (for GSHHG) |
 | `prepare_base.py` | `raw/` | `base.json`, `states.json`, `ne_rivers.json` | shapely |
+| `trace_hydrosheds.py` | `raw/hydrosheds/…/HydroRIVERS_v10_eu.shp`, waters, `data/geometry/*` | `hydro.json`, `build/hydro_report.json` | pyshp |
 | `trace_rivers.py` | `raw/gshhs_rivers_f.json`, waters, `via_points.json`, `config.json` | `traced.json`, `build/trace_report.json` | numpy, scipy |
-| `build_geometry.py` | waters, `data/geometry/*`, `traced.json`, `ne_rivers.json` | `geometry.json` | stdlib |
+| `build_geometry.py` | waters, `data/geometry/*`, `hydro.json`, `traced.json`, `ne_rivers.json` | `geometry.json` | stdlib |
 | `validate.py` | waters, `geometry.json` | — (`--fix` rewrites waters) | stdlib |
 | `build_site.py` | waters, `data/generated/*`, `web/*.template.html` | `dist/`, `build/poster.html` | stdlib |
 | `export_csv.py` | waters, `geometry.json` | `dist/gewaesser-deutschland.csv` | stdlib |
 | `render.mjs` | `dist/index.html`, `build/poster.html` | PDF, screenshots | playwright |
 
-## Tracing (trace_rivers.py)
+## Tracing in HydroRIVERS (trace_hydrosheds.py)
 
-GSHHG/WDBII contains ~80 000 digitised river points around Germany but no names. For every river
+[HydroRIVERS](https://www.hydrosheds.org/products/hydrorivers) v1.0 (HydroSHEDS, 15 arc-second, Europe tile;
+`fetch_sources.py` downloads `HydroRIVERS_v10_eu_shp.zip`, ~68 MB, to `raw/hydrosheds/`) is a river network
+derived from an elevation model. It is *routed*: every reach knows the reach it drains into (`NEXT_DOWN`) and
+its vertices run downstream. It has no names. Since source, mouth and length of every river are known, the
+course is found by walking the network downstream:
+
+1. **Candidates.** Reaches with a vertex near the documented source: radius max(3, min(10, 0.08 L)) km,
+   widened ×2.5 and then ×4 if nothing fits.
+2. **Walk.** From each candidate follow `NEXT_DOWN`. Parents are traced before their tributaries; the walk
+   ends when it enters a reach already assigned to the parent (the confluence). For rivers whose parent is
+   not traced (sea, lake, coastal water) it is cut at the vertex nearest the documented mouth (or
+   `draw_end`).
+3. **Score** (lowest wins): `|walked − 0.89·L| + 2·mouth distance + source distance + 3·Σ tributary distances`.
+   The last term sums how far the mouths of the river's own tributaries lie from the walked course (capped
+   at 8 km each), which separates a river from a neighbour with a similar length. The factor 0.89 is the
+   median walked/documented length ratio: 15" lines cut the smallest meanders.
+4. **Rejections.** Mouth more than max(5, min(15, 0.15 L)) km off the walk's end, except when the walk
+   reaches the network outlet (an estuary; a straight tail to the mouth is then added); walked/documented
+   length outside 0.6–1.45 (short courses pass when source and mouth both lie within 2.5 km); tributary
+   mouths far off the course.
+5. **Simplification.** Ramer–Douglas–Peucker at 0.12 km.
+
+Because the walk starts at the documented source, a wrong source coordinate yields a wrong or missing
+match: check the coordinates against de.wikipedia first. `build/hydro_report.json` states for every river
+the chosen match or the reason for rejection; the rivers it lists as unmatched fall back to GSHHG, Natural
+Earth or the schematic course. The Elbe gets its estuary tail from `manual_courses.json`.
+
+## Tracing in GSHHG (trace_rivers.py)
+
+GSHHG/WDBII is the fallback for rivers HydroRIVERS cannot match. It contains ~80 000 digitised river points around Germany but no names. For every river
 and canal we know source, mouth and length, so the tracer searches the network for the best
 matching path:
 
@@ -61,7 +92,7 @@ matching path:
 
 ## Geometry (build_geometry.py)
 
-Priority `kanal` → `gshhs` → `ne` → `schema`, then snapping and clipping; see CLAUDE.md.
+Priority `kanal` → `hydro` → `gshhs` → `ne` → `schema`, then snapping and clipping; see CLAUDE.md.
 Parameters live in `data/geometry/config.json`:
 
 | key | meaning |

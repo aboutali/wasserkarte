@@ -6,14 +6,15 @@ HydroRIVERS is a routed network: every reach knows the reach it drains into
 we know source, mouth and length, so the course is a downstream walk:
 
   1. Candidates: reaches with a vertex within R_SRC of the documented source.
-  2. From each candidate vertex, follow NEXT_DOWN until the walk
-       - enters a reach already assigned to the parent (the confluence), or
-       - for rivers whose parent is not traced (sea, lake, coastal water):
-         passes the vertex closest to the documented mouth.
-  3. Keep the candidate whose walked length best fits length_km, with
-     penalties for the distance between the documented and the found source
-     and mouth. Reject if the confluence is too far from the documented mouth
-     or the length is implausible.
+  2. From each candidate vertex, follow NEXT_DOWN. Cut the walk where it
+     enters the parent's traced course (the confluence) if that lies near the
+     documented mouth; otherwise at the vertex closest to the documented mouth
+     (parent not traced: sea, lake, coastal water, or no match).
+  3. Keep the candidate whose walked length best fits LEN_FACTOR × length_km,
+     with penalties for the distance between the documented and the found
+     source and mouth, and for the river's own tributary mouths that lie off
+     the course. If nothing fits, widen the source radius. Reject if the mouth
+     is too far off or the length is implausible.
 
 Parents are traced before their tributaries, so every tributary ends exactly on
 its parent's course. Courses are simplified (Ramer–Douglas–Peucker, SIMPLIFY_KM).
@@ -131,23 +132,24 @@ def rdp(pts, eps_km):
     return [p for p, k in zip(pts, keep) if k]
 
 
-def trace(net, w, mouth, tribs, free_length):
+def trace(net, w, mouth, tribs, free_length, parent_reaches):
     """Best downstream walk for w, or a string with the reason for rejection.
 
     tribs: mouths of w's own tributaries — the course should pass them all.
     free_length: the course is drawn to a point short of the real mouth (draw_end),
     so the length only has an upper bound.
+    parent_reaches: HydroRIVERS reaches of the parent's course, if the parent is traced.
     """
     L = w["length_km"]
     for radius in (r_src(L), 2.5 * r_src(L), 4 * r_src(L)):
-        r = best_walk(net, w, mouth, tribs, free_length, radius)
+        r = best_walk(net, w, mouth, tribs, free_length, parent_reaches, radius)
         if isinstance(r, dict):
             r["radius"] = radius
             return r
     return r
 
 
-def best_walk(net, w, mouth, tribs, free_length, radius):
+def best_walk(net, w, mouth, tribs, free_length, parent_reaches, radius):
     L, S = w["length_km"], w["source"]
     best, seen = None, set()
     for ds, rid, k in net.near(S, radius):
@@ -156,6 +158,12 @@ def best_walk(net, w, mouth, tribs, free_length, radius):
             continue
         pts = [net.pts[r][kk] for r, kk, _ in steps]
         cut = min(range(len(pts)), key=lambda i: kmd(pts[i], mouth))
+        # prefer the confluence: the last vertex before the walk enters the parent's course
+        j = next((i for i, st in enumerate(steps) if st[0] in parent_reaches), None)
+        if j == 0:
+            continue                                  # starts on the parent itself
+        if j is not None and kmd(pts[j - 1], mouth) <= r_mouth(L):
+            cut = j - 1
         key = (steps[cut][0], steps[cut][1], steps[min(cut, 1)][0])
         if key in seen:
             continue
@@ -205,6 +213,7 @@ def main() -> None:
     children = collections.defaultdict(list)
     for w in waters:
         children[w.get("parent")].append(w)
+    reaches = {}                                   # id -> HydroRIVERS reaches of its course
     out, report = {}, {}
     rivers = [w for w in waters if w["type"] == "river"]
     for w in sorted(rivers, key=lambda x: (level(x["id"], by_id), -(x.get("length_km") or 0))):
@@ -215,10 +224,12 @@ def main() -> None:
         mouth = draw_end.get(wid) or w["mouth"]
         tribs = [c["mouth"] for c in children[wid] if c["type"] == "river" and c.get("mouth")
                  and kmd(c["mouth"], w["source"]) > 2 and kmd(c["mouth"], mouth) > 2]
-        r = trace(net, w, mouth, tribs, wid in draw_end)
+        r = trace(net, w, mouth, tribs, wid in draw_end, reaches.get(w.get("parent"), set()))
         if isinstance(r, str):
             report[wid] = r
             continue
+        # the first reach may belong to a head stream (Werra above the Weser's source)
+        reaches[wid] = {st[0] for st in r["steps"] if st[0] != r["steps"][0][0]}
         line = [list(net.pts[rid][k]) for rid, k, _ in r["steps"]]
         if r["ds"] > 0.3:
             line = [list(w["source"])] + line
